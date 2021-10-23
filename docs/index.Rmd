@@ -67,7 +67,9 @@ library(scales)
 library(GetTDData)
 library(RColorBrewer)
 library(ggrepel)
-
+library(XML)
+library(glue)
+library(bizdays)
 
 options(scipen = 999)
 
@@ -77,17 +79,22 @@ options(scipen = 999)
 
 ```{r, include=FALSE, warning=FALSE}
 
-dt_inicio_semana = as.Date("2021-10-11")
-dt_fim_semana = as.Date("2021-10-15")
-dt_commoditie_final_semana = "15/10/2021"
+# segunda-feira
+dt_inicio_semana = as.Date("2021-10-18")
+
+# sexta-feira
+dt_fim_semana = as.Date("2021-10-22")
+dt_commoditie_final_semana = "22/10/2021"
 
 
-#setwd("C:\\Users\\pc\\Desktop\\BP_Investimentos\\BPMacro\\docs")
+setwd("C:\\Users\\pc\\Desktop\\BP_Investimentos\\BPMacro\\docs")
+#setwd("C:\\Users\\BI-Assessor\\Desktop\\BP_Investimentos\\BPMacro\\docs")
 
 
 # Configura API Fred
 fred_key <- "5b0e1127100c4f575b6f76a23fcdfcfe"
 fredr_set_key(fred_key)
+
 
 ################################################################################
 ######## Função - Leitura ------------------------------------------------------
@@ -559,7 +566,7 @@ all_bounds_gather$titulo_ano <- factor(all_bounds_gather$titulo_ano,
 
 
 # usando a versão e o enviroment desejado do Anaconda ----------------------
-#use_python("C:\\Users\\pc\\anaconda3\\python.exe", required = TRUE)
+use_python("C:\\Users\\pc\\anaconda3\\python.exe", required = TRUE)
 
 
 # conferindo a versão e o enviroment ----------------------------
@@ -600,8 +607,8 @@ brent_futuro$data <- ymd(brent_futuro$data)
 
 brent_graph <- ggplot(brent_futuro, aes(x = data, y = Close)) +
   geom_line(size = 1.1, colour = "#ffa600") +
-  labs(y="Preço do contrato futuro", x="", fill="",
-       title = "Petróleo (Brent)",
+  labs(y="Preço do contrato futuro (em Dólar)", x="", fill="",
+       title = "Petróleo Brent Futuros - Dez 21 (BZ1)",
        caption = "Fonte: Investing.com | Elaboração: BP Investimentos",
        colour = "") +
   theme_minimal() +
@@ -638,8 +645,8 @@ ferro_futuros$data <- ymd(ferro_futuros$data)
 
 ferro_graph <- ggplot(ferro_futuros, aes(x = data, y = Close)) +
   geom_line(size = 1.1, colour = "#ffa600") +
-  labs(y="Preço do contrato futuro", x="", fill="",
-       title = "Minério de ferro",
+  labs(y="Preço do contrato futuro (em Dólar)", x="", fill="",
+       title = "Minério de ferro 62% Futuros",
        caption = "Fonte: Investing.com | Elaboração: BP Investimentos",
        colour = "") +
   theme_minimal() +
@@ -657,6 +664,157 @@ ferro_graph <- ggplot(ferro_futuros, aes(x = data, y = Close)) +
                      limits = c(70, 230)) +
   scale_x_date(date_labels = "%b\n%Y", breaks = "3 month") +
   theme_xaringan(text_font_size = 10)
+
+
+
+############ Soja -------------------------------------
+
+
+search_result_soja <- investpy$search_quotes(text = "us-soybeans", n_results = as.integer(1))
+
+
+soja_futuro <- search_result_soja$retrieve_historical_data(from_date = '01/01/2020', to_date = dt_commoditie_final_semana)
+
+
+# coluna com data
+soja_futuro$data <- row.names(soja_futuro)
+soja_futuro$data <- ymd(soja_futuro$data)
+
+
+soja_graph <- ggplot(soja_futuro, aes(x = data, y = Close)) +
+  geom_line(size = 1.1, colour = "#ffa600") +
+  labs(y="Preço do contrato futuro", x="", fill="",
+       title = "Soja NY Futuros - Nov 21 (ZSX1)",
+       caption = "Fonte: Investing.com | Elaboração: BP Investimentos",
+       colour = "") +
+  theme_minimal() +
+  theme(legend.position = "bottom",
+        strip.text = element_text(face = "bold", size = "11"),
+        plot.title = element_text(size=17, hjust = 0.5, face="bold"),
+        plot.subtitle = element_text(color = "dodgerblue4", hjust = 0.5, face="bold", size = 12),
+        axis.text.y = element_text(face="bold", color="#000000",size=10),
+        axis.text.x = element_text(face="bold", color="#000000",size=10),
+        axis.title.y = element_text(size = 10)) +
+  scale_y_continuous(labels = scales::dollar_format(prefix = "US$",
+                                                    big.mark = ".",
+                                                    decimal.mark = ","),
+                     breaks = seq(800,1800,200),
+                     limits = c(800,1800)) +
+  scale_x_date(date_labels = "%b\n%Y", breaks = "3 month") +
+  theme_xaringan(text_font_size = 10)
+
+
+############ Milho -------------------------------------
+
+
+search_result_milho <- investpy$search_quotes(text = "us-corn", n_results = as.integer(1))
+
+
+milho_futuro <- search_result_milho$retrieve_historical_data(from_date = '01/01/2020', to_date = dt_commoditie_final_semana)
+
+
+# coluna com data
+milho_futuro$data <- row.names(milho_futuro)
+milho_futuro$data <- ymd(milho_futuro$data)
+
+
+milho_graph <- ggplot(milho_futuro, aes(x = data, y = Close)) +
+  geom_line(size = 1.1, colour = "#ffa600") +
+  labs(y="Preço do contrato futuro (em Dólar)", x="", fill="",
+       title = "Milho NY Futuros - Dez 21 (ZCZ1)",
+       caption = "Fonte: Investing.com | Elaboração: BP Investimentos",
+       colour = "") +
+  theme_minimal() +
+  theme(legend.position = "bottom",
+        strip.text = element_text(face = "bold", size = "11"),
+        plot.title = element_text(size=17, hjust = 0.5, face="bold"),
+        plot.subtitle = element_text(color = "dodgerblue4", hjust = 0.5, face="bold", size = 12),
+        axis.text.y = element_text(face="bold", color="#000000",size=10),
+        axis.text.x = element_text(face="bold", color="#000000",size=10),
+        axis.title.y = element_text(size = 10)) +
+  scale_y_continuous(labels = scales::dollar_format(prefix = "US$",
+                                                    big.mark = ".",
+                                                    decimal.mark = ","),
+                     breaks = seq(250,800,100),
+                     limits = c(250,800)) +
+  scale_x_date(date_labels = "%b\n%Y", breaks = "3 month") +
+  theme_xaringan(text_font_size = 10)
+
+
+############ Algodão -------------------------------------
+
+
+search_result_algodao <- investpy$search_quotes(text = "us-cotton-no.2", n_results = as.integer(1))
+
+
+algodao_futuros <- search_result_algodao$retrieve_historical_data(from_date = '01/01/2020', to_date = dt_commoditie_final_semana)
+
+
+# coluna com data
+algodao_futuros$data <- row.names(algodao_futuros)
+algodao_futuros$data <- ymd(algodao_futuros$data)
+
+
+algodao_graph <- ggplot(algodao_futuros, aes(x = data, y = Close)) +
+  geom_line(size = 1.1, colour = "#ffa600") +
+  labs(y="Preço do contrato futuro (em Dólar)", x="", fill="",
+       title = "Algodão NY nº2 Futuros - Dez 21 (CTZ1)",
+       caption = "Fonte: Investing.com | Elaboração: BP Investimentos",
+       colour = "") +
+  theme_minimal() +
+  theme(legend.position = "bottom",
+        strip.text = element_text(face = "bold", size = "11"),
+        plot.title = element_text(size=17, hjust = 0.5, face="bold"),
+        plot.subtitle = element_text(color = "dodgerblue4", hjust = 0.5, face="bold", size = 12),
+        axis.text.y = element_text(face="bold", color="#000000",size=10),
+        axis.text.x = element_text(face="bold", color="#000000",size=10),
+        axis.title.y = element_text(size = 10)) +
+  scale_y_continuous(labels = scales::dollar_format(prefix = "US$",
+                                                    big.mark = ".",
+                                                    decimal.mark = ","),
+                     breaks = seq(40,120,20),
+                     limits = c(40,120)) +
+  scale_x_date(date_labels = "%b\n%Y", breaks = "3 month") +
+  theme_xaringan(text_font_size = 10)
+
+
+
+############ Boi Gordo -------------------------------------
+
+
+search_result_boi_gordo <- investpy$search_quotes(text = "live-cattle", countries = as.list("brazil"), n_results = as.integer(1))
+
+
+boi_gordo_futuros <- search_result_boi_gordo$retrieve_historical_data(from_date = '01/01/2020', to_date = dt_commoditie_final_semana)
+
+
+# coluna com data
+boi_gordo_futuros$data <- row.names(boi_gordo_futuros)
+boi_gordo_futuros$data <- ymd(boi_gordo_futuros$data)
+
+
+boi_graph <- ggplot(boi_gordo_futuros, aes(x = data, y = Close)) +
+  geom_line(size = 1.1, colour = "#ffa600") +
+  labs(y="Preço do contrato futuro (em Real)", x="", fill="",
+       title = "Boi Gordo Futuros - Out 21 (BGIc1)",
+       caption = "Fonte: Investing.com | Elaboração: BP Investimentos",
+       colour = "") +
+  theme_minimal() +
+  theme(legend.position = "bottom",
+        strip.text = element_text(face = "bold", size = "11"),
+        plot.title = element_text(size=17, hjust = 0.5, face="bold"),
+        plot.subtitle = element_text(color = "dodgerblue4", hjust = 0.5, face="bold", size = 12),
+        axis.text.y = element_text(face="bold", color="#000000",size=10),
+        axis.text.x = element_text(face="bold", color="#000000",size=10),
+        axis.title.y = element_text(size = 10)) +
+  scale_y_continuous(labels = scales::dollar_format(prefix = "R$",
+                                                    big.mark = ".",
+                                                    decimal.mark = ","),
+                     breaks = seq(180,330,30),
+                     limits = c(180,330)) +
+  scale_x_date(date_labels = "%b\n%Y", breaks = "3 month") +
+  theme_xaringan(text_font_size = 10)
+
 
 
 ##############################################################################################
@@ -767,6 +925,227 @@ scale_colour_manual(values = c("#173F5F", "#20639B", "#3CAEA3", "#F6D55C", "#ED5
                       label.position = "bottom")) +
   theme_xaringan(text_font_size = 10)
  
+
+ 
+########### Prefixado -------------------------------------------------
+ 
+
+# Data de refrência -----------------
+#dt_prefix = as.Date("2021-10-15")
+
+
+####################################################################
+### Taxa DI --------------------------------------------------------
+####################################################################
+
+
+#cdi <- get_series(c(CDI = 4389), start_date = "2010-01-02")
+
+# cdi[2967,1] <- as.Date("2021-10-22")
+# cdi[2967,2] <- as.numeric(6.15)
+
+####################################################################
+### Captando e tratando dados --------------------------------------
+####################################################################
+
+### Pesquisa por pregão B3
+
+# http://www.b3.com.br/pt_br/market-data-e-indices/servicos-de-dados/market-data/historico/boletins-diarios/pesquisa-por-pregao/pesquisa-por-pregao/>
+
+### Leitura do arquivo Pricing Report BVBG.086
+
+# <http://www.b3.com.br/data/files/99/04/3A/E5/38B80710E7BCA507DC0D8AA8/Catalogo%20de%20Taxonomia%20UP2DATA%20-%20Portugues.pdf>
+
+
+# Link para o arquivo ----------------------
+# url = format(dt_prefix, "http://www.b3.com.br/pesquisapregao/download?filelist=PR%y%m%d.zip")
+# 
+# download.file(url, destfile = "pesquisa-pregao.zip", method = "auto")
+# 
+# 
+# # Arquivo vem zipado 2x. Primeiro zip ------------------------
+# filename_0 <- "pesquisa-pregao.zip"
+# 
+# # Segundo zip -----------------------------
+# filename = format(dt_prefix, "PR%y%m%d.zip")
+# 
+# # Descompactando arquivos ------------------
+# files = unzip(filename_0)
+# files = unzip(files)
+# 
+# fname = max(files)
+# 
+# 
+# negDoc = xmlInternalTreeParse(fname)
+# negs = getNodeSet(negDoc, "//d:PricRpt", c(d="urn:bvmf.217.01.xsd"))
+# negs[[1]]
+# 
+# 
+# # Função para filtrar dados DI 1 ---------------------
+# filtrando_contratos_DI1 <- function(node) {
+#   ticker <- xmlValue(node[['SctyId']][['TckrSymb']])
+#   if (str_detect(ticker, "^DI1")) {
+#     extraindo_dados_DI1(ticker, node)
+#   } else {
+#     NULL
+#   }
+# }
+# 
+# 
+# # Função para extrair dados DI 1 ---------------------------
+# extraindo_dados_DI1 <- function(ticker, node) {
+#   refdate <- xmlValue(node[['TradDt']][['Dt']])
+#   attrib <- node[['FinInstrmAttrbts']]
+#   
+#   data.frame(
+#     refdate = refdate,
+#     ticker = ticker,
+#     contratos_em_aberto = as.numeric(xmlValue(attrib[['OpnIntrst']])),
+#     n_negocios = as.numeric(xmlValue(attrib[['RglrTxsQty']])),
+#     contratos_negociados = as.numeric(xmlValue(attrib[['FinInstrmQty']])),
+#     volume_reais = as.numeric(xmlValue(attrib[['NtlFinVol']])),
+#     valor_fechamento = as.numeric(xmlValue(attrib[['LastPric']])),
+#     valor_ajuste_taxa = as.numeric(xmlValue(attrib[['AdjstdQtTax']])),
+#     valor_ajuste = as.numeric(xmlValue(attrib[['AdjstdQt']])),
+#     preco_abertura = as.numeric(xmlValue(attrib[['FrstPric']])),
+#     preco_minimo = as.numeric(xmlValue(attrib[['MinPric']])),
+#     preco_maximo = as.numeric(xmlValue(attrib[['MaxPric']])),
+#     preco_medio = as.numeric(xmlValue(attrib[['TradAvrgPric']])),
+#     stringsAsFactors = FALSE)
+# }
+# 
+# 
+# # Criando dataframe com dados XML ---------------------------
+# #debugonce(extraindo_dados_DI1)
+# negs_df <- negs %>% map_df(filtrando_contratos_DI1)
+# 
+# 
+# # Organizando dataframe ------------------------
+# negs_df %>%
+#   arrange(desc(contratos_em_aberto))
+# 
+# 
+# ### Gerando as datas de vencimento
+# # Os códigos de vencimento seguem a convenção da B3
+# #Os contratos futuros de DI1 tem vencimento no primeiro dia útil do mês
+# 
+# contract_to_maturity <- function(x) {
+#   maturity_code <- str_sub(x, -3)
+#   
+#   year <- as.integer( str_extract(maturity_code, "\\d\\d$") ) + 2000
+#   
+#   m_ <- c(F = 1, G = 2, H = 3, J = 4, K = 5, M = 6, N = 7, Q = 8, U = 9, V = 10, X = 11, Z = 12)
+#   month_code <- str_extract(maturity_code, "^.")
+#   month <- m_[month_code] %>%
+#     str_pad(2, pad = "0")
+#   
+#   glue("{year}-{month}-01") %>% as.Date()
+#   
+# }
+# 
+# 
+# # Criando dataframe com dados XML ---------------------------
+# 
+# #debugonce(contract_to_maturity)
+# 
+# 
+# negs_df <- negs_df %>%
+#   mutate(vencimento = contract_to_maturity(ticker))
+# 
+# 
+# refdate <- negs_df$refdate[1]
+# 
+# 
+# 
+# ##### Construindo a curva de taxas de juros prefixados ---------------
+# 
+# # incluir o primeiro vértice a curva de juros
+# v_cdi <- cdi %>%
+#   filter(date == refdate) %>%
+#   mutate(
+#     DataRef = refdate,
+#     Vencimento = offset(DataRef, 1, "Brazil/ANBIMA"),
+#     DU = 1,
+#     Taxa = CDI) %>%
+#   select(DataRef, Vencimento, DU, Taxa)
+# 
+# #v_cdi
+# 
+# v_di1 <- negs_df %>%
+#   mutate(
+#     VencimentoAj = following(vencimento, "Brazil/ANBIMA"),
+#     DU = bizdays(refdate, VencimentoAj, "Brazil/ANBIMA")
+#   ) %>%
+#   rename(
+#     DataRef = refdate,
+#     Vencimento = VencimentoAj,
+#     Taxa = valor_ajuste_taxa) %>%
+#   select(DataRef, Vencimento, DU, Taxa)
+# 
+# #v_di1
+# 
+# curva_pre <- rbind(v_cdi, v_di1) %>% arrange(DU)
+# 
+# 
+# write.csv2(curva_pre, paste0("curva-pre_", dt_prefix,".csv"), row.names = F)
+
+
+### gráfico -----
+
+
+curva_seg <- read.csv2("curva-pre_2021-10-15.csv")
+
+curva_sex <- read.csv2("curva-pre_2021-10-22.csv")
+
+
+
+curvas <- rbind(curva_seg, curva_sex)
+
+
+curvas$DataRef <- ymd(curvas$DataRef)
+curvas$Vencimento <- ymd(curvas$Vencimento)
+
+
+curvas$dia_semana <- weekdays(curvas$DataRef)
+
+
+curvas$dia_semana <- paste0(format(curvas$DataRef, "%d/%m/%Y")," (", curvas$dia_semana, ")")
+
+
+#curva_pre
+
+plot_curvas_pre <- ggplot(curvas, aes(x = Vencimento, y = Taxa, colour = dia_semana, group = dia_semana)) +
+  geom_line(size = 1.2) +
+  theme_minimal() +
+  labs(title = "Curvas Juros (ETTJ Prefixado)",
+       subtitle = "ETTJ = Estrutura a Termo da Taxa de Juros",
+       colour = "",
+       caption = "Fonte: B3 | Elaboração: BP Investimentos") +
+    scale_x_date(date_labels = "%Y", breaks = "1 year", expand = c(0,100)) +
+  theme(legend.position = "top",
+          plot.caption = element_text(size= 10),
+          legend.text = element_text(size = 11),
+          strip.text = element_text(face = "bold", color = "#2E2C2F", size = "11"),
+          plot.title = element_text(size=17, color = "black", hjust = 0.5, face="bold"),
+          plot.subtitle = element_text(face="italic", size = 8, hjust = 0.5),
+          axis.text.y = element_text(face="bold", color="#000000",size=10),
+          axis.text.x = element_text(face="bold", color="#000000",size=10),
+          axis.title.x = element_text(size = 10),
+          axis.title.y = element_text(size = 10)) +
+    scale_color_manual(values = c("#003f5c", "#bc5090"),
+                       drop = FALSE,
+                       guide = guide_legend(
+                         direction = "horizontal",
+                         keyheight = unit(2, units = "mm"), 
+                         keywidth = unit(60/length(labels), units = "mm"),
+                         title.position = 'top',
+                         title.hjust = 0.5,
+                         label.hjust = 0.5,
+                         nrow = 1,
+                         byrow = TRUE,
+                         reverse = FALSE,
+                         label.position = "top")) +
+  theme_xaringan(text_font_size = 10)
  
 
 ################################################################################
@@ -1260,6 +1639,33 @@ grid.arrange(ferro_graph, brent_graph, ncol = 2)
 
 
 ---
+
+<br />
+<br />
+
+
+```{r echo=FALSE}
+
+grid.arrange(soja_graph, milho_graph, ncol = 2)
+
+```
+
+
+---
+
+<br />
+<br />
+
+
+```{r echo=FALSE}
+
+grid.arrange(algodao_graph, boi_graph, ncol = 2)
+
+```
+
+
+
+---
 background-image: url("renda_fixa.png")
 background-position: center
 background-size: contain
@@ -1283,6 +1689,18 @@ ntnb_graph
 ```{r echo=FALSE}
 
 ntnf_graph
+
+```
+
+
+---
+<br />
+<br />
+
+
+```{r echo=FALSE}
+
+plot_curvas_pre 
 
 ```
 
