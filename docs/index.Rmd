@@ -1117,7 +1117,7 @@ curvas$dia_semana <- paste0(format(curvas$DataRef, "%d/%m/%Y")," (", curvas$dia_
 plot_curvas_pre <- ggplot(curvas, aes(x = Vencimento, y = Taxa, colour = dia_semana, group = dia_semana)) +
   geom_line(size = 1.2) +
   theme_minimal() +
-  labs(title = "Curvas Juros (ETTJ Prefixado)",
+  labs(title = "Curvas de Juros (ETTJ Prefixado)",
        subtitle = "ETTJ = Estrutura a Termo da Taxa de Juros",
        colour = "",
        caption = "Fonte: B3 | Elaboração: BP Investimentos") +
@@ -1463,6 +1463,32 @@ ggplot(acoes_setores_complete_pt1,
   scale_fill_manual(values = c("#27ae60","#c0392b")) +
   geom_hline(yintercept = 5.5, linetype = "dashed") +
   geom_vline(xintercept = 0) +
+   geom_segment(x = sum(min(acoes_setores_complete_pt1$var_semanal), tail(acoes_setores_complete_pt1$var_semanal, n=2))/3,
+               y = 7,
+               xend = sum(min(acoes_setores_complete_pt1$var_semanal), tail(acoes_setores_complete_pt1$var_semanal, n=2))/3,
+               yend = 8,
+               arrow = arrow(length = unit(0.03, "npc")),
+               size = 1.2,
+               colour = "#0d7539") +
+  annotate("text", label = "5 Melhores\nPerfomances",
+           x = sum(min(acoes_setores_complete_pt1$var_semanal), tail(acoes_setores_complete_pt1$var_semanal, n=2))/2,
+           y = 7.5,
+           size = 2.5,
+           fontface = "bold",
+           colour = "#0d7539") +
+  geom_segment(x = sum(max(acoes_setores_complete_pt1$var_semanal), head(acoes_setores_complete_pt1$var_semanal, n=2))/6,
+               y = 4,
+               xend = sum(max(acoes_setores_complete_pt1$var_semanal), head(acoes_setores_complete_pt1$var_semanal, n=2))/6,
+               yend = 3,
+               arrow = arrow(length = unit(0.03, "npc")),
+               size = 1.2,
+               colour = "#831b2c") +
+  annotate("text", label = "5 Piores\nPerfomances",
+           x = sum(max(acoes_setores_complete_pt1$var_semanal), head(acoes_setores_complete_pt1$var_semanal, n=2), 0.02),
+           y = 3.5,
+           size = 2.5,
+           fontface = "bold",
+           colour = "#c0392b") +
   theme_minimal() +
   theme(legend.position = "none",
           strip.text = element_text(face = "bold", color = "#2E2C2F", size = "11"),
@@ -1479,7 +1505,8 @@ ggplot(acoes_setores_complete_pt1,
                                   0.05),
                      limits = c(min(acoes_setores_complete_pt1$var_semanal)-0.05,
                                 max(acoes_setores_complete_pt1$var_semanal)+ 0.05)) +
-  labs(title = "Ações com maiores e menores altas na semana, por setor",
+  labs(title = "As 5 ações com melhores e piores performances da semana, por setor",
+       subtitle = "Variação semanal no valor da ação",
        x = "Variação na semana (%)",
        y = "",
        caption = paste("Fonte: Yahoo Finance! | Elaboração: BP Investimentos\nNota: Apenas ações com movimentação de ao menos R$ 1.000.000,00 por dia.")) +
@@ -1507,6 +1534,32 @@ ggplot(acoes_setores_complete_pt2,aes(x = var_semanal,  y = reorder(nome_acao_se
   scale_fill_manual(values = c("#27ae60","#c0392b")) +
   geom_hline(yintercept = 5.5, linetype = "dashed") +
   geom_vline(xintercept = 0) +
+     geom_segment(x = sum(min(acoes_setores_complete_pt1$var_semanal), tail(acoes_setores_complete_pt1$var_semanal, n=2))/3,
+               y = 7,
+               xend = sum(min(acoes_setores_complete_pt1$var_semanal), tail(acoes_setores_complete_pt1$var_semanal, n=2))/3,
+               yend = 8,
+               arrow = arrow(length = unit(0.03, "npc")),
+               size = 1.2,
+               colour = "#0d7539") +
+  annotate("text", label = "5 Melhores\nPerfomances",
+           x = sum(min(acoes_setores_complete_pt1$var_semanal), tail(acoes_setores_complete_pt1$var_semanal, n=2))/2,
+           y = 7.5,
+           size = 2.5,
+           fontface = "bold",
+           colour = "#0d7539") +
+  geom_segment(x = sum(max(acoes_setores_complete_pt1$var_semanal), head(acoes_setores_complete_pt1$var_semanal, n=2))/6,
+               y = 4,
+               xend = sum(max(acoes_setores_complete_pt1$var_semanal), head(acoes_setores_complete_pt1$var_semanal, n=2))/6,
+               yend = 3,
+               arrow = arrow(length = unit(0.03, "npc")),
+               size = 1.2,
+               colour = "#831b2c") +
+  annotate("text", label = "5 Piores\nPerfomances",
+           x = sum(max(acoes_setores_complete_pt1$var_semanal), head(acoes_setores_complete_pt1$var_semanal, n=2), 0.02),
+           y = 3.5,
+           size = 2.5,
+           fontface = "bold",
+           colour = "#c0392b") +
   theme_minimal() +
    theme(legend.position = "none",
           strip.text = element_text(face = "bold", color = "#2E2C2F", size = "11"),
@@ -1518,12 +1571,19 @@ ggplot(acoes_setores_complete_pt2,aes(x = var_semanal,  y = reorder(nome_acao_se
           axis.text.x = element_text(face="bold", color="#000000",size=8)) +
   facet_wrap(~Setor, scales = "free") +
   scale_x_continuous(labels = scales::percent_format(big.mark = ".", decimal.mark = ",", accuracy = 1),
-                     breaks = seq(min(acoes_setores_complete_pt2$var_semanal)-0.05,
-                                  max(acoes_setores_complete_pt2$var_semanal)+ 0.05,
+                     breaks = seq(min(acoes_setores_complete_pt1$var_semanal)-0.05,
+                                  max(acoes_setores_complete_pt1$var_semanal)+ 0.05,
                                   0.05),
-                     limits = c(min(acoes_setores_complete_pt2$var_semanal)-0.05,
-                                max(acoes_setores_complete_pt2$var_semanal)+ 0.05)) +
-  labs(title = "Ações com maiores e menores altas na semana, por setor",
+                     limits = c(min(acoes_setores_complete_pt1$var_semanal)-0.05,
+                                max(acoes_setores_complete_pt1$var_semanal)+ 0.05)) +
+  # scale_x_continuous(labels = scales::percent_format(big.mark = ".", decimal.mark = ",", accuracy = 1),
+  #                    breaks = seq(min(acoes_setores_complete_pt2$var_semanal)-0.05,
+  #                                 max(acoes_setores_complete_pt2$var_semanal)+ 0.05,
+  #                                 0.05),
+  #                    limits = c(min(acoes_setores_complete_pt2$var_semanal)-0.05,
+  #                               max(acoes_setores_complete_pt2$var_semanal)+ 0.05)) +
+  labs(title = "As 5 ações com melhores e piores performances da semana, por setor",
+              subtitle = "Variação semanal no valor da ação",
        x = "Variação na semana (%)",
        y = "",
        caption = paste("Fonte: Yahoo Finance! | Elaboração: BP Investimentos\nNota: Apenas ações com movimentação de ao menos R$ 1.000.000,00 por dia.")) +
