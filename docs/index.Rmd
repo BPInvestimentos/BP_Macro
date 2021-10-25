@@ -683,7 +683,7 @@ soja_futuro$data <- ymd(soja_futuro$data)
 
 soja_graph <- ggplot(soja_futuro, aes(x = data, y = Close)) +
   geom_line(size = 1.1, colour = "#ffa600") +
-  labs(y="Preço do contrato futuro", x="", fill="",
+  labs(y="Preço do contrato futuro (em Dólar)", x="", fill="",
        title = "Soja NY Futuros - Nov 21 (ZSX1)",
        caption = "Fonte: Investing.com | Elaboração: BP Investimentos",
        colour = "") +
@@ -1463,26 +1463,26 @@ ggplot(acoes_setores_complete_pt1,
   scale_fill_manual(values = c("#27ae60","#c0392b")) +
   geom_hline(yintercept = 5.5, linetype = "dashed") +
   geom_vline(xintercept = 0) +
-   geom_segment(x = sum(min(acoes_setores_complete_pt1$var_semanal), tail(acoes_setores_complete_pt1$var_semanal, n=2))/3,
-               y = 7,
-               xend = sum(min(acoes_setores_complete_pt1$var_semanal), tail(acoes_setores_complete_pt1$var_semanal, n=2))/3,
-               yend = 8,
-               arrow = arrow(length = unit(0.03, "npc")),
-               size = 1.2,
-               colour = "#0d7539") +
+   # geom_segment(x = sum(min(acoes_setores_complete_pt1$var_semanal), tail(acoes_setores_complete_pt1$var_semanal, n=2))/3,
+   #             y = 7,
+   #             xend = sum(min(acoes_setores_complete_pt1$var_semanal), tail(acoes_setores_complete_pt1$var_semanal, n=2))/3,
+   #             yend = 8,
+   #             arrow = arrow(length = unit(0.03, "npc")),
+   #             size = 1.2,
+   #             colour = "#0d7539") +
   annotate("text", label = "5 Melhores\nPerfomances",
            x = sum(min(acoes_setores_complete_pt1$var_semanal), tail(acoes_setores_complete_pt1$var_semanal, n=2))/2,
            y = 7.5,
            size = 2.5,
            fontface = "bold",
            colour = "#0d7539") +
-  geom_segment(x = sum(max(acoes_setores_complete_pt1$var_semanal), head(acoes_setores_complete_pt1$var_semanal, n=2))/6,
-               y = 4,
-               xend = sum(max(acoes_setores_complete_pt1$var_semanal), head(acoes_setores_complete_pt1$var_semanal, n=2))/6,
-               yend = 3,
-               arrow = arrow(length = unit(0.03, "npc")),
-               size = 1.2,
-               colour = "#831b2c") +
+  # geom_segment(x = sum(max(acoes_setores_complete_pt1$var_semanal), head(acoes_setores_complete_pt1$var_semanal, n=2))/6,
+  #              y = 4,
+  #              xend = sum(max(acoes_setores_complete_pt1$var_semanal), head(acoes_setores_complete_pt1$var_semanal, n=2))/6,
+  #              yend = 3,
+  #              arrow = arrow(length = unit(0.03, "npc")),
+  #              size = 1.2,
+  #              colour = "#831b2c") +
   annotate("text", label = "5 Piores\nPerfomances",
            x = sum(max(acoes_setores_complete_pt1$var_semanal), head(acoes_setores_complete_pt1$var_semanal, n=2), 0.02),
            y = 3.5,
@@ -1502,7 +1502,7 @@ ggplot(acoes_setores_complete_pt1,
   scale_x_continuous(labels = scales::percent_format(big.mark = ".", decimal.mark = ",", accuracy = 1),
                      breaks = seq(min(acoes_setores_complete_pt1$var_semanal)-0.05,
                                   max(acoes_setores_complete_pt1$var_semanal)+ 0.05,
-                                  0.05),
+                                  0.1),
                      limits = c(min(acoes_setores_complete_pt1$var_semanal)-0.05,
                                 max(acoes_setores_complete_pt1$var_semanal)+ 0.05)) +
   labs(title = "As 5 ações com melhores e piores performances da semana, por setor",
@@ -1534,26 +1534,26 @@ ggplot(acoes_setores_complete_pt2,aes(x = var_semanal,  y = reorder(nome_acao_se
   scale_fill_manual(values = c("#27ae60","#c0392b")) +
   geom_hline(yintercept = 5.5, linetype = "dashed") +
   geom_vline(xintercept = 0) +
-     geom_segment(x = sum(min(acoes_setores_complete_pt1$var_semanal), tail(acoes_setores_complete_pt1$var_semanal, n=2))/3,
-               y = 7,
-               xend = sum(min(acoes_setores_complete_pt1$var_semanal), tail(acoes_setores_complete_pt1$var_semanal, n=2))/3,
-               yend = 8,
-               arrow = arrow(length = unit(0.03, "npc")),
-               size = 1.2,
-               colour = "#0d7539") +
+     # geom_segment(x = sum(min(acoes_setores_complete_pt1$var_semanal), tail(acoes_setores_complete_pt1$var_semanal, n=2))/3,
+     #           y = 7,
+     #           xend = sum(min(acoes_setores_complete_pt1$var_semanal), tail(acoes_setores_complete_pt1$var_semanal, n=2))/3,
+     #           yend = 8,
+     #           arrow = arrow(length = unit(0.03, "npc")),
+     #           size = 1.2,
+     #           colour = "#0d7539") +
   annotate("text", label = "5 Melhores\nPerfomances",
            x = sum(min(acoes_setores_complete_pt1$var_semanal), tail(acoes_setores_complete_pt1$var_semanal, n=2))/2,
            y = 7.5,
            size = 2.5,
            fontface = "bold",
            colour = "#0d7539") +
-  geom_segment(x = sum(max(acoes_setores_complete_pt1$var_semanal), head(acoes_setores_complete_pt1$var_semanal, n=2))/6,
-               y = 4,
-               xend = sum(max(acoes_setores_complete_pt1$var_semanal), head(acoes_setores_complete_pt1$var_semanal, n=2))/6,
-               yend = 3,
-               arrow = arrow(length = unit(0.03, "npc")),
-               size = 1.2,
-               colour = "#831b2c") +
+  # geom_segment(x = sum(max(acoes_setores_complete_pt1$var_semanal), head(acoes_setores_complete_pt1$var_semanal, n=2))/6,
+  #              y = 4,
+  #              xend = sum(max(acoes_setores_complete_pt1$var_semanal), head(acoes_setores_complete_pt1$var_semanal, n=2))/6,
+  #              yend = 3,
+  #              arrow = arrow(length = unit(0.03, "npc")),
+  #              size = 1.2,
+  #              colour = "#831b2c") +
   annotate("text", label = "5 Piores\nPerfomances",
            x = sum(max(acoes_setores_complete_pt1$var_semanal), head(acoes_setores_complete_pt1$var_semanal, n=2), 0.02),
            y = 3.5,
@@ -1572,10 +1572,10 @@ ggplot(acoes_setores_complete_pt2,aes(x = var_semanal,  y = reorder(nome_acao_se
   facet_wrap(~Setor, scales = "free") +
   scale_x_continuous(labels = scales::percent_format(big.mark = ".", decimal.mark = ",", accuracy = 1),
                      breaks = seq(min(acoes_setores_complete_pt1$var_semanal)-0.05,
-                                  max(acoes_setores_complete_pt1$var_semanal)+ 0.05,
-                                  0.05),
+                                  max(acoes_setores_complete_pt2$var_semanal)+ 0.1,
+                                  0.1),
                      limits = c(min(acoes_setores_complete_pt1$var_semanal)-0.05,
-                                max(acoes_setores_complete_pt1$var_semanal)+ 0.05)) +
+                                max(acoes_setores_complete_pt2$var_semanal)+ 0.1)) +
   # scale_x_continuous(labels = scales::percent_format(big.mark = ".", decimal.mark = ",", accuracy = 1),
   #                    breaks = seq(min(acoes_setores_complete_pt2$var_semanal)-0.05,
   #                                 max(acoes_setores_complete_pt2$var_semanal)+ 0.05,
