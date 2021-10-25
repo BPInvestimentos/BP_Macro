@@ -1500,11 +1500,11 @@ ggplot(acoes_setores_complete_pt1,
           axis.text.x = element_text(face="bold", color="#000000",size=8)) +
   facet_wrap(~Setor, scales = "free") +
   scale_x_continuous(labels = scales::percent_format(big.mark = ".", decimal.mark = ",", accuracy = 1),
-                     breaks = seq(min(acoes_setores_complete_pt1$var_semanal)-0.05,
-                                  max(acoes_setores_complete_pt1$var_semanal)+ 0.05,
+                     breaks = seq(min(acoes_setores_complete_pt1$var_semanal)-0.1,
+                                  max(acoes_setores_complete_pt1$var_semanal)+ 0.1,
                                   0.1),
-                     limits = c(min(acoes_setores_complete_pt1$var_semanal)-0.05,
-                                max(acoes_setores_complete_pt1$var_semanal)+ 0.05)) +
+                     limits = c(min(acoes_setores_complete_pt1$var_semanal)-0.1,
+                                max(acoes_setores_complete_pt1$var_semanal)+ 0.1)) +
   labs(title = "As 5 ações com melhores e piores performances da semana, por setor",
        subtitle = "Variação semanal no valor da ação",
        x = "Variação na semana (%)",
