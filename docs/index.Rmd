@@ -80,14 +80,14 @@ options(scipen = 999)
 ```{r, include=FALSE, warning=FALSE}
 
 # segunda-feira
-dt_inicio_semana = as.Date("2021-10-18")
+dt_inicio_semana = as.Date("2021-10-25")
 
 # sexta-feira
-dt_fim_semana = as.Date("2021-10-22")
-dt_commoditie_final_semana = "22/10/2021"
+dt_fim_semana = as.Date("2021-10-29")
+dt_commoditie_final_semana = "29/10/2021"
 
 
-setwd("C:\\Users\\pc\\Desktop\\BP_Investimentos\\BPMacro\\docs")
+#setwd("C:\\Users\\pc\\Desktop\\BP_Investimentos\\BPMacro\\docs")
 #setwd("C:\\Users\\BI-Assessor\\Desktop\\BP_Investimentos\\BPMacro\\docs")
 
 
@@ -167,7 +167,7 @@ PlotaRetornoSemanal <- function(Tabela, Nome, Fonte, step) {
     ggplot(Tabela, aes(x = Semana,  y = VarSemanal, fill = Color)) + 
     geom_col() + 
     geom_text(aes(label = paste0(format(round(VarSemanal*100,2), big.mark = ".", decimal.mark = ","),"%"),
-                  vjust = ifelse(VarSemanal >= 0, -0.5, 1.5)),size = 3,
+                  vjust = ifelse(VarSemanal >= 0, -0.5, 1.5)),size = 2.5,
                   color = 'black',fontface='bold') +
     scale_fill_manual(values = c("#27ae60","#c0392b")) +
     geom_hline(yintercept = 0) +
@@ -239,7 +239,7 @@ var_semanal_ewz <- function() {
   graph_ewz <- ggplot(ewz_fil_var, aes(x = semana,  y = var_semanal, fill = Color)) + 
     geom_col() + 
     geom_text(aes(label = paste0(format(round(var_semanal*100,2), big.mark = ".", decimal.mark = ","),"%"),
-                  vjust = ifelse(var_semanal >= 0, -0.5, 1.5)),size = 3,
+                  vjust = ifelse(var_semanal >= 0, -0.5, 1.5)),size = 2.5,
               color = 'black',fontface='bold') +
    scale_fill_manual(values = c("#27ae60","#c0392b")) +
     geom_hline(yintercept = 0) +
@@ -566,7 +566,7 @@ all_bounds_gather$titulo_ano <- factor(all_bounds_gather$titulo_ano,
 
 
 # usando a versão e o enviroment desejado do Anaconda ----------------------
-use_python("C:\\Users\\pc\\anaconda3\\python.exe", required = TRUE)
+#use_python("C:\\Users\\pc\\anaconda3\\python.exe", required = TRUE)
 
 
 # conferindo a versão e o enviroment ----------------------------
@@ -622,8 +622,8 @@ brent_graph <- ggplot(brent_futuro, aes(x = data, y = Close)) +
   scale_y_continuous(labels = scales::dollar_format(prefix = "US$",
                                                     big.mark = ".",
                                                     decimal.mark = ","),
-                     breaks = c(15,25,35,45,55,65,75,85),
-                     limits = c(15,85)) +
+                     breaks = c(15,25,35,45,55,65,75,85,95),
+                     limits = c(15,100)) +
   scale_x_date(date_labels = "%b\n%Y", breaks = "3 month") +
   theme_xaringan(text_font_size = 10)
 
@@ -823,9 +823,9 @@ boi_graph <- ggplot(boi_gordo_futuros, aes(x = data, y = Close)) +
 
 
 # fazendo download das NTN-B's
-download.TD.data('NTN-B')
-ntnb <- read.TD.files(dl.folder = 'TD Files',
-                      asset.codes = 'NTN-B')
+GetTDData::download.TD.data('NTN-B')
+ntnb <- GetTDData::read.TD.files(dl.folder = 'TD Files',
+                                 asset.codes = 'NTN-B')
 
 
 ntnb <- ntnb %>% filter(asset.code !="NTN-B 150535")
@@ -931,18 +931,18 @@ scale_colour_manual(values = c("#173F5F", "#20639B", "#3CAEA3", "#F6D55C", "#ED5
  
 
 # Data de refrência -----------------
-#dt_prefix = as.Date("2021-10-15")
-
-
-####################################################################
-### Taxa DI --------------------------------------------------------
-####################################################################
-
-
-#cdi <- get_series(c(CDI = 4389), start_date = "2010-01-02")
-
-# cdi[2967,1] <- as.Date("2021-10-22")
-# cdi[2967,2] <- as.numeric(6.15)
+# dt_prefix = as.Date("2021-10-29")
+# 
+# 
+# ####################################################################
+# ### Taxa DI --------------------------------------------------------
+# ####################################################################
+# 
+# 
+# cdi <- get_series(c(CDI = 4389), start_date = "2010-01-02")
+# 
+# cdi[2972,1] <- as.Date("2021-10-29")
+# cdi[2972,2] <- as.numeric(7.65)
 
 ####################################################################
 ### Captando e tratando dados --------------------------------------
@@ -957,7 +957,7 @@ scale_colour_manual(values = c("#173F5F", "#20639B", "#3CAEA3", "#F6D55C", "#ED5
 # <http://www.b3.com.br/data/files/99/04/3A/E5/38B80710E7BCA507DC0D8AA8/Catalogo%20de%20Taxonomia%20UP2DATA%20-%20Portugues.pdf>
 
 
-# Link para o arquivo ----------------------
+# # Link para o arquivo ----------------------
 # url = format(dt_prefix, "http://www.b3.com.br/pesquisapregao/download?filelist=PR%y%m%d.zip")
 # 
 # download.file(url, destfile = "pesquisa-pregao.zip", method = "auto")
@@ -991,12 +991,12 @@ scale_colour_manual(values = c("#173F5F", "#20639B", "#3CAEA3", "#F6D55C", "#ED5
 #   }
 # }
 # 
-# 
+# ### Pesquisa por pregão B3
 # # Função para extrair dados DI 1 ---------------------------
 # extraindo_dados_DI1 <- function(ticker, node) {
 #   refdate <- xmlValue(node[['TradDt']][['Dt']])
 #   attrib <- node[['FinInstrmAttrbts']]
-#   
+# 
 #   data.frame(
 #     refdate = refdate,
 #     ticker = ticker,
@@ -1031,16 +1031,16 @@ scale_colour_manual(values = c("#173F5F", "#20639B", "#3CAEA3", "#F6D55C", "#ED5
 # 
 # contract_to_maturity <- function(x) {
 #   maturity_code <- str_sub(x, -3)
-#   
+# 
 #   year <- as.integer( str_extract(maturity_code, "\\d\\d$") ) + 2000
-#   
+# 
 #   m_ <- c(F = 1, G = 2, H = 3, J = 4, K = 5, M = 6, N = 7, Q = 8, U = 9, V = 10, X = 11, Z = 12)
 #   month_code <- str_extract(maturity_code, "^.")
 #   month <- m_[month_code] %>%
 #     str_pad(2, pad = "0")
-#   
+# 
 #   glue("{year}-{month}-01") %>% as.Date()
-#   
+# 
 # }
 # 
 # 
@@ -1093,9 +1093,9 @@ scale_colour_manual(values = c("#173F5F", "#20639B", "#3CAEA3", "#F6D55C", "#ED5
 ### gráfico -----
 
 
-curva_seg <- read.csv2("curva-pre_2021-10-15.csv")
+curva_seg <- read.csv2("curva-pre_2021-10-22.csv")
 
-curva_sex <- read.csv2("curva-pre_2021-10-22.csv")
+curva_sex <- read.csv2("curva-pre_2021-10-29.csv")
 
 
 
@@ -1344,7 +1344,7 @@ vertical_sep_ipca <- ggplot(contribuicao2, aes(x=variação,y=setor,fill=Color))
   facet_wrap(~mes, ncol = 4) +
   geom_text(aes(x = variação + 0.08 * sign(variação), label= round(variação,4)), 
             position = position_dodge(width = 0.9), 
-            size = 1.8, color = 'black',fontface='bold') +
+            size = 2, color = 'black',fontface='bold') +
   theme_minimal() +
   theme(plot.title = element_text(face="bold", size = 12),
         plot.subtitle = element_text(face="italic", size = 8),
