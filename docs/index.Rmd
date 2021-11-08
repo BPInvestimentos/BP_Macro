@@ -80,11 +80,11 @@ options(scipen = 999)
 ```{r, include=FALSE, warning=FALSE}
 
 # segunda-feira
-dt_inicio_semana = as.Date("2021-10-25")
+dt_inicio_semana = as.Date("2021-11-01")
 
 # sexta-feira
-dt_fim_semana = as.Date("2021-10-29")
-dt_commoditie_final_semana = "29/10/2021"
+dt_fim_semana = as.Date("2021-11-05")
+dt_commoditie_final_semana = "05/11/2021"
 
 
 #setwd("C:\\Users\\pc\\Desktop\\BP_Investimentos\\BPMacro\\docs")
@@ -371,7 +371,7 @@ acoes_setores_complete <- rbind(acoes_setores_v3_maiores, acoes_setores_v3_menor
 acoes_setores_complete <- acoes_setores_complete %>% filter(Setor %in% c("Bens Industriais", "Consumo Cíclico",
                                                                           "Consumo não Cíclico", "Financeiro",
                                                                           "Materiais Básicos", "Petróleo. Gás e Biocombustíveis",
-                                                                           "Saúde", "Utilidade Pública"))
+                                                                           "Tecnologia da Informação", "Utilidade Pública"))
 
 
 # Transformando em dataframe --------------------------------
@@ -389,7 +389,7 @@ acoes_setores_complete_pt1 <- acoes_setores_complete %>%
 
 acoes_setores_complete_pt2 <- acoes_setores_complete %>%
   filter(Setor %in% c("Materiais Básicos", "Petróleo. Gás e Biocombustíveis",
-                      "Saúde", "Utilidade Pública"))
+                      "Tecnologia da Informação", "Utilidade Pública"))
 
 
 ##########################################################################################
@@ -566,7 +566,7 @@ all_bounds_gather$titulo_ano <- factor(all_bounds_gather$titulo_ano,
 
 
 # usando a versão e o enviroment desejado do Anaconda ----------------------
-#use_python("C:\\Users\\pc\\anaconda3\\python.exe", required = TRUE)
+use_python("C:\\Users\\pc\\anaconda3\\python.exe", required = TRUE)
 
 
 # conferindo a versão e o enviroment ----------------------------
@@ -623,7 +623,7 @@ brent_graph <- ggplot(brent_futuro, aes(x = data, y = Close)) +
                                                     big.mark = ".",
                                                     decimal.mark = ","),
                      breaks = c(15,25,35,45,55,65,75,85,95),
-                     limits = c(15,100)) +
+                     limits = c(15,95)) +
   scale_x_date(date_labels = "%b\n%Y", breaks = "3 month") +
   theme_xaringan(text_font_size = 10)
 
@@ -930,8 +930,8 @@ scale_colour_manual(values = c("#173F5F", "#20639B", "#3CAEA3", "#F6D55C", "#ED5
 ########### Prefixado -------------------------------------------------
  
 
-# Data de refrência -----------------
-# dt_prefix = as.Date("2021-10-29")
+# # Data de refrência -----------------
+# dt_prefix = as.Date("2021-11-05")
 # 
 # 
 # ####################################################################
@@ -941,22 +941,22 @@ scale_colour_manual(values = c("#173F5F", "#20639B", "#3CAEA3", "#F6D55C", "#ED5
 # 
 # cdi <- get_series(c(CDI = 4389), start_date = "2010-01-02")
 # 
-# cdi[2972,1] <- as.Date("2021-10-29")
-# cdi[2972,2] <- as.numeric(7.65)
-
-####################################################################
-### Captando e tratando dados --------------------------------------
-####################################################################
-
-### Pesquisa por pregão B3
-
-# http://www.b3.com.br/pt_br/market-data-e-indices/servicos-de-dados/market-data/historico/boletins-diarios/pesquisa-por-pregao/pesquisa-por-pregao/>
-
-### Leitura do arquivo Pricing Report BVBG.086
-
-# <http://www.b3.com.br/data/files/99/04/3A/E5/38B80710E7BCA507DC0D8AA8/Catalogo%20de%20Taxonomia%20UP2DATA%20-%20Portugues.pdf>
-
-
+# cdi[2976,1] <- as.Date("2021-11-05")
+# cdi[2976,2] <- as.numeric(7.65)
+# 
+# ####################################################################
+# ### Captando e tratando dados --------------------------------------
+# ####################################################################
+# 
+# ### Pesquisa por pregão B3
+# 
+# # http://www.b3.com.br/pt_br/market-data-e-indices/servicos-de-dados/market-data/historico/boletins-diarios/pesquisa-por-pregao/pesquisa-por-pregao/>
+# 
+# ### Leitura do arquivo Pricing Report BVBG.086
+# 
+# # <http://www.b3.com.br/data/files/99/04/3A/E5/38B80710E7BCA507DC0D8AA8/Catalogo%20de%20Taxonomia%20UP2DATA%20-%20Portugues.pdf>
+# 
+# 
 # # Link para o arquivo ----------------------
 # url = format(dt_prefix, "http://www.b3.com.br/pesquisapregao/download?filelist=PR%y%m%d.zip")
 # 
@@ -1093,9 +1093,9 @@ scale_colour_manual(values = c("#173F5F", "#20639B", "#3CAEA3", "#F6D55C", "#ED5
 ### gráfico -----
 
 
-curva_seg <- read.csv2("curva-pre_2021-10-22.csv")
+curva_seg <- read.csv2("curva-pre_2021-10-29.csv")
 
-curva_sex <- read.csv2("curva-pre_2021-10-29.csv")
+curva_sex <- read.csv2("curva-pre_2021-11-05.csv")
 
 
 
@@ -1344,7 +1344,7 @@ vertical_sep_ipca <- ggplot(contribuicao2, aes(x=variação,y=setor,fill=Color))
   facet_wrap(~mes, ncol = 4) +
   geom_text(aes(x = variação + 0.08 * sign(variação), label= round(variação,4)), 
             position = position_dodge(width = 0.9), 
-            size = 2, color = 'black',fontface='bold') +
+            size = 1.8, color = 'black',fontface='bold') +
   theme_minimal() +
   theme(plot.title = element_text(face="bold", size = 12),
         plot.subtitle = element_text(face="italic", size = 8),
@@ -1484,7 +1484,8 @@ ggplot(acoes_setores_complete_pt1,
   #              size = 1.2,
   #              colour = "#831b2c") +
   annotate("text", label = "5 Piores\nPerfomances",
-           x = sum(max(acoes_setores_complete_pt1$var_semanal), head(acoes_setores_complete_pt1$var_semanal, n=2), 0.02),
+           x = sum(max(acoes_setores_complete_pt1$var_semanal)/2, 0.05),
+         #   head(acoes_setores_complete_pt1$var_semanal, n=3)
            y = 3.5,
            size = 2.5,
            fontface = "bold",
@@ -1534,28 +1535,15 @@ ggplot(acoes_setores_complete_pt2,aes(x = var_semanal,  y = reorder(nome_acao_se
   scale_fill_manual(values = c("#27ae60","#c0392b")) +
   geom_hline(yintercept = 5.5, linetype = "dashed") +
   geom_vline(xintercept = 0) +
-     # geom_segment(x = sum(min(acoes_setores_complete_pt1$var_semanal), tail(acoes_setores_complete_pt1$var_semanal, n=2))/3,
-     #           y = 7,
-     #           xend = sum(min(acoes_setores_complete_pt1$var_semanal), tail(acoes_setores_complete_pt1$var_semanal, n=2))/3,
-     #           yend = 8,
-     #           arrow = arrow(length = unit(0.03, "npc")),
-     #           size = 1.2,
-     #           colour = "#0d7539") +
   annotate("text", label = "5 Melhores\nPerfomances",
            x = sum(min(acoes_setores_complete_pt1$var_semanal), tail(acoes_setores_complete_pt1$var_semanal, n=2))/2,
            y = 7.5,
            size = 2.5,
            fontface = "bold",
            colour = "#0d7539") +
-  # geom_segment(x = sum(max(acoes_setores_complete_pt1$var_semanal), head(acoes_setores_complete_pt1$var_semanal, n=2))/6,
-  #              y = 4,
-  #              xend = sum(max(acoes_setores_complete_pt1$var_semanal), head(acoes_setores_complete_pt1$var_semanal, n=2))/6,
-  #              yend = 3,
-  #              arrow = arrow(length = unit(0.03, "npc")),
-  #              size = 1.2,
-  #              colour = "#831b2c") +
   annotate("text", label = "5 Piores\nPerfomances",
-           x = sum(max(acoes_setores_complete_pt1$var_semanal), head(acoes_setores_complete_pt1$var_semanal, n=2), 0.02),
+           x = sum(max(acoes_setores_complete_pt2$var_semanal)/2, 0.05),
+        #   x = sum(max(acoes_setores_complete_pt1$var_semanal), head(acoes_setores_complete_pt1$var_semanal, n=2), 0.02),
            y = 3.5,
            size = 2.5,
            fontface = "bold",
