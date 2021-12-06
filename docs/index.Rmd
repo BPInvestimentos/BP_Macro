@@ -74,7 +74,7 @@ library(bizdays)
 options(scipen = 999)
 
 
-setwd("C:\\Users\\pc\\Desktop\\BP_Investimentos\\BPMacro\\docs")
+#setwd("C:\\Users\\pc\\Desktop\\BP_Investimentos\\BPMacro\\docs")
 
 ```
 
@@ -82,15 +82,15 @@ setwd("C:\\Users\\pc\\Desktop\\BP_Investimentos\\BPMacro\\docs")
 ```{r, include=FALSE, warning=FALSE}
 
 # segunda-feira
-dt_inicio_semana = as.Date("2021-11-22")
+dt_inicio_semana = as.Date("2021-11-29")
 
 # sexta-feira
-dt_fim_semana = as.Date("2021-11-26")
-dt_commoditie_final_semana = "26/11/2021"
+dt_fim_semana = as.Date("2021-12-03")
+dt_commoditie_final_semana = "03/12/2021"
 
 
 #setwd("C:\\Users\\pc\\Desktop\\BP_Investimentos\\BPMacro\\docs")
-#setwd("C:\\Users\\BI-Assessor\\Desktop\\BP_Investimentos\\BPMacro\\docs")
+setwd("C:\\Users\\BI-Assessor\\Desktop\\BP_Investimentos\\BPMacro\\docs")
 
 
 # Configura API Fred
@@ -316,19 +316,22 @@ var_semanal_ewz <- function() {
 ############# Buscando ações ---------------------------------------------------------
 ######################################################################################
 
+
+indicadores_setores_v2 <- read.csv2("indicadores_setores_v2.csv")
+
+# 
 # acoes_setores <- tq_get(indicadores_setores_v2$acoes_sa,
 #                         from = dt_inicio_semana,
 #                         to = dt_fim_semana,
 #                         get = "stock.prices")
 # 
 # 
-# # Salvando em csv ------------------------
+# # # Salvando em csv ------------------------
 # write.csv2(acoes_setores, "acoes_setores.csv", row.names = F)
 
- 
+
 # # Carregando csv -----------------------
  acoes_setores <- read.csv2("acoes_setores.csv")
- indicadores_setores_v2 <- read.csv2("indicadores_setores_v2.csv")
 
 
 acoes_setores$date <- ymd(acoes_setores$date)
@@ -580,7 +583,7 @@ all_bounds_gather$titulo_ano <- factor(all_bounds_gather$titulo_ano,
 
 
 # usando a versão e o enviroment desejado do Anaconda ----------------------
-use_python("C:\\Users\\pc\\anaconda3\\python.exe", required = TRUE)
+#use_python("C:\\Users\\pc\\anaconda3\\python.exe", required = TRUE)
 
 
 # conferindo a versão e o enviroment ----------------------------
@@ -955,6 +958,7 @@ scale_colour_manual(values = c("#173F5F", "#20639B", "#3CAEA3", "#F6D55C", "#ED5
 # 
 # cdi <- get_series(c(CDI = 4389), start_date = "2010-01-02")
 # 
+#  cdi <- cdi %>% filter(date <= "2021-11-26")
 #  # cdi[2985,1] <- as.Date("2021-11-19")
 #  # cdi[2985,2] <- as.numeric(7.65)
 # 
@@ -1102,14 +1106,14 @@ scale_colour_manual(values = c("#173F5F", "#20639B", "#3CAEA3", "#F6D55C", "#ED5
 # 
 # 
 # write.csv2(curva_pre, paste0("curva-pre_", dt_prefix,".csv"), row.names = F)
-# 
+
 
 ### gráfico -----
 
 
-curva_seg <- read.csv2("curva-pre_2021-11-19.csv")
+curva_seg <- read.csv2("curva-pre_2021-11-26.csv")
 
-curva_sex <- read.csv2("curva-pre_2021-11-26.csv")
+curva_sex <- read.csv2("curva-pre_2021-12-03.csv")
 
 
 
@@ -1516,7 +1520,7 @@ ggplot(acoes_setores_v3_menores,
   geom_text(aes(label = paste0(format(round(var_semanal*100,2), big.mark = ".", decimal.mark = ","),"%"),
                 hjust = ifelse(var_semanal >= 0, -0.2, 1.3)),size = 2.5,
             color = 'black',fontface='bold') +
-  scale_fill_manual(values = c("#27ae60", "#c0392b")) +
+  scale_fill_manual(values = c("#27ae60","#c0392b")) +
   # geom_hline(yintercept = 5.5, linetype = "dashed") +
   geom_vline(xintercept = 0) +
   theme_minimal() +
@@ -1578,8 +1582,8 @@ ggplot(dataset_indices, aes(x=date,y = ret_acum)) +
     scale_x_date(date_labels = "%b\n%Y", breaks = "3 month", expand = c(0,30)) +
     facet_wrap(~indice, nrow = 2) +
     scale_y_continuous(labels = scales::percent_format(big.mark = ".", decimal.mark = ","),
-                       breaks = seq(-0.2,0.4,0.1),
-                       limits = c(-0.2,0.4)) +
+                       breaks = seq(-0.1,0.4,0.1),
+                       limits = c(-0.1,0.4)) +
     theme_xaringan(text_font_size = 10)
 
 
