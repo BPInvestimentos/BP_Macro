@@ -82,15 +82,15 @@ options(scipen = 999)
 ```{r, include=FALSE, warning=FALSE}
 
 # segunda-feira
-dt_inicio_semana = as.Date("2021-11-29")
+dt_inicio_semana = as.Date("2021-12-06")
 
 # sexta-feira
-dt_fim_semana = as.Date("2021-12-03")
-dt_commoditie_final_semana = "03/12/2021"
+dt_fim_semana = as.Date("2021-12-10")
+dt_commoditie_final_semana = "10/12/2021"
 
 
-#setwd("C:\\Users\\pc\\Desktop\\BP_Investimentos\\BPMacro\\docs")
-setwd("C:\\Users\\BI-Assessor\\Desktop\\BP_Investimentos\\BPMacro\\docs")
+setwd("C:\\Users\\pc\\Desktop\\BP_Investimentos\\BPMacro\\docs")
+#setwd("C:\\Users\\BI-Assessor\\Desktop\\BP_Investimentos\\BPMacro\\docs")
 
 
 # Configura API Fred
@@ -169,7 +169,7 @@ PlotaRetornoSemanal <- function(Tabela, Nome, Fonte, step) {
     ggplot(Tabela, aes(x = Semana,  y = VarSemanal, fill = Color)) + 
     geom_col() + 
     geom_text(aes(label = paste0(format(round(VarSemanal*100,2), big.mark = ".", decimal.mark = ","),"%"),
-                  vjust = ifelse(VarSemanal >= 0, -0.5, 1.5)),size = 2.5,
+                  vjust = ifelse(VarSemanal >= 0, -0.5, 1.5)),size = 2.2,
                   color = 'black',fontface='bold') +
     scale_fill_manual(values = c("#27ae60","#c0392b")) +
     geom_hline(yintercept = 0) +
@@ -183,8 +183,8 @@ PlotaRetornoSemanal <- function(Tabela, Nome, Fonte, step) {
           axis.title.x = element_text(face="bold", color="#000000",size = 9),
           axis.title.y = element_text(face="bold", color="#000000",size = 9),
           plot.subtitle = element_text(size=9, hjust = 0.5, face="bold"),
-          axis.text.y = element_text(face="bold", color="#000000",size = 9),
-          axis.text.x = element_text(face="bold", color="#000000",size = 9)) +
+          axis.text.y = element_text(face="bold", color="#000000",size = 8),
+          axis.text.x = element_text(face="bold", color="#000000",size = 8)) +
     labs(title = paste(Nome, "-", "Variação Semanal"), y = "Variação",
          subtitle = paste("Última atualização:", 
                           DataMaisRecente),
@@ -241,7 +241,7 @@ var_semanal_ewz <- function() {
   graph_ewz <- ggplot(ewz_fil_var, aes(x = semana,  y = var_semanal, fill = Color)) + 
     geom_col() + 
     geom_text(aes(label = paste0(format(round(var_semanal*100,2), big.mark = ".", decimal.mark = ","),"%"),
-                  vjust = ifelse(var_semanal >= 0, -0.5, 1.5)),size = 2.5,
+                  vjust = ifelse(var_semanal >= 0, -0.5, 1.5)),size = 2.2,
               color = 'black',fontface='bold') +
    scale_fill_manual(values = c("#27ae60","#c0392b")) +
     geom_hline(yintercept = 0) +
@@ -255,8 +255,8 @@ var_semanal_ewz <- function() {
           axis.title.x = element_text(face="bold", color="#000000",size = 9),
           axis.title.y = element_text(face="bold", color="#000000",size = 9),
           plot.subtitle = element_text(size=9, hjust = 0.5, face="bold"),
-          axis.text.y = element_text(face="bold", color="#000000",size = 9),
-          axis.text.x = element_text(face="bold", color="#000000",size = 9)) +
+          axis.text.y = element_text(face="bold", color="#000000",size = 8),
+          axis.text.x = element_text(face="bold", color="#000000",size = 8)) +
     labs(title = paste("EWZ - Variação Semanal"),
          y = "Variação",
          x = "Semana",
@@ -319,7 +319,7 @@ var_semanal_ewz <- function() {
 
 indicadores_setores_v2 <- read.csv2("indicadores_setores_v2.csv")
 
-# 
+
 # acoes_setores <- tq_get(indicadores_setores_v2$acoes_sa,
 #                         from = dt_inicio_semana,
 #                         to = dt_fim_semana,
@@ -583,7 +583,7 @@ all_bounds_gather$titulo_ano <- factor(all_bounds_gather$titulo_ano,
 
 
 # usando a versão e o enviroment desejado do Anaconda ----------------------
-#use_python("C:\\Users\\pc\\anaconda3\\python.exe", required = TRUE)
+use_python("C:\\Users\\pc\\anaconda3\\python.exe", required = TRUE)
 
 
 # conferindo a versão e o enviroment ----------------------------
@@ -701,7 +701,7 @@ soja_futuro$data <- ymd(soja_futuro$data)
 soja_graph <- ggplot(soja_futuro, aes(x = data, y = Close)) +
   geom_line(size = 1.1, colour = "#ffa600") +
   labs(y="Preço do contrato futuro (em Dólar)", x="", fill="",
-       title = "Soja NY Futuros - Nov 21 (ZSX1)",
+       title = "Soja NY Futuros - Dez 21 (ZSX1)",
        caption = "Fonte: Investing.com | Elaboração: BP Investimentos",
        colour = "") +
   theme_minimal() +
@@ -813,7 +813,7 @@ boi_gordo_futuros$data <- ymd(boi_gordo_futuros$data)
 boi_graph <- ggplot(boi_gordo_futuros, aes(x = data, y = Close)) +
   geom_line(size = 1.1, colour = "#ffa600") +
   labs(y="Preço do contrato futuro (em Real)", x="", fill="",
-       title = "Boi Gordo Futuros - Out 21 (BGIc1)",
+       title = "Boi Gordo Futuros - Dez 21 (BGIc1)",
        caption = "Fonte: Investing.com | Elaboração: BP Investimentos",
        colour = "") +
   theme_minimal() +
@@ -946,9 +946,9 @@ scale_colour_manual(values = c("#173F5F", "#20639B", "#3CAEA3", "#F6D55C", "#ED5
  
 ########### Prefixado -------------------------------------------------
 
-# 
+
 # # Data de refrência -----------------
-# dt_prefix = as.Date("2021-11-26")
+# dt_prefix = as.Date("2021-12-10")
 # 
 # 
 # ####################################################################
@@ -958,9 +958,9 @@ scale_colour_manual(values = c("#173F5F", "#20639B", "#3CAEA3", "#F6D55C", "#ED5
 # 
 # cdi <- get_series(c(CDI = 4389), start_date = "2010-01-02")
 # 
-#  cdi <- cdi %>% filter(date <= "2021-11-26")
-#  # cdi[2985,1] <- as.Date("2021-11-19")
-#  # cdi[2985,2] <- as.numeric(7.65)
+#  #cdi <- cdi %>% filter(date <= "2021-11-26")
+#   cdi[3000,1] <- as.Date("2021-12-10")
+#   cdi[3000,2] <- as.numeric(9.15)
 # 
 # ####################################################################
 # ### Captando e tratando dados --------------------------------------
@@ -1111,9 +1111,9 @@ scale_colour_manual(values = c("#173F5F", "#20639B", "#3CAEA3", "#F6D55C", "#ED5
 ### gráfico -----
 
 
-curva_seg <- read.csv2("curva-pre_2021-11-26.csv")
+curva_seg <- read.csv2("curva-pre_2021-12-03.csv")
 
-curva_sex <- read.csv2("curva-pre_2021-12-03.csv")
+curva_sex <- read.csv2("curva-pre_2021-12-10.csv")
 
 
 
@@ -1284,7 +1284,7 @@ inflacao_grupo <- '/t/1737/n1/all/v/2266/p/all/d/v2266%2013' %>%
   select(date, indice, inflacao_mensal, inflacao_anual)
 
 
-inflacao_grupo <- inflacao_grupo %>% filter("2021-01-01" <= date & date <= "2021-10-01")
+inflacao_grupo <- inflacao_grupo %>% filter("2021-01-01" <= date & date <= "2021-11-01")
 
 # criando coluna com apenas o mês/ano
 contribuicao$mes_ano <- format(contribuicao$date, "%Y%m")
@@ -1351,7 +1351,7 @@ contribuicao2$setor <-  factor(contribuicao2$setor, levels = c("Vestuário",
 # gráfico de impacto mensal por grupo, separado por mês
 vertical_sep_ipca <- ggplot(contribuicao2, aes(x=variação,y=setor,fill=Color))+
   geom_col() +
-  labs(x="", y="", subtitle = "Variação acumulada em 2021 (%): 8,24\nVariação acumulada em 12 meses (%): 10,67", fill="",
+  labs(x="", y="", subtitle = "Variação acumulada em 2021 (%): 9,26\nVariação acumulada em 12 meses (%): 10,74", fill="",
        caption = "Fonte: Índice de Preços ao Consumidor Amplo (IPCA) - IBGE | Elaboração: BP Investimentos",
        title = "Contribuição, em pontos percentuais, de cada grupo do IPCA na inflação mensal. 2021") +
   geom_vline(xintercept = 0) +
@@ -1582,8 +1582,8 @@ ggplot(dataset_indices, aes(x=date,y = ret_acum)) +
     scale_x_date(date_labels = "%b\n%Y", breaks = "3 month", expand = c(0,30)) +
     facet_wrap(~indice, nrow = 2) +
     scale_y_continuous(labels = scales::percent_format(big.mark = ".", decimal.mark = ","),
-                       breaks = seq(-0.1,0.4,0.1),
-                       limits = c(-0.1,0.4)) +
+                       breaks = seq(-0.2,0.4,0.1),
+                       limits = c(-0.2,0.4)) +
     theme_xaringan(text_font_size = 10)
 
 
