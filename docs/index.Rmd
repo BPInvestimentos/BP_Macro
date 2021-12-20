@@ -82,11 +82,11 @@ options(scipen = 999)
 ```{r, include=FALSE, warning=FALSE}
 
 # segunda-feira
-dt_inicio_semana = as.Date("2021-12-06")
+dt_inicio_semana = as.Date("2021-12-13")
 
 # sexta-feira
-dt_fim_semana = as.Date("2021-12-10")
-dt_commoditie_final_semana = "10/12/2021"
+dt_fim_semana = as.Date("2021-12-17")
+dt_commoditie_final_semana = "17/12/2021"
 
 
 setwd("C:\\Users\\pc\\Desktop\\BP_Investimentos\\BPMacro\\docs")
@@ -946,9 +946,9 @@ scale_colour_manual(values = c("#173F5F", "#20639B", "#3CAEA3", "#F6D55C", "#ED5
  
 ########### Prefixado -------------------------------------------------
 
-
+# 
 # # Data de refrência -----------------
-# dt_prefix = as.Date("2021-12-10")
+# dt_prefix = as.Date("2021-12-17")
 # 
 # 
 # ####################################################################
@@ -959,8 +959,8 @@ scale_colour_manual(values = c("#173F5F", "#20639B", "#3CAEA3", "#F6D55C", "#ED5
 # cdi <- get_series(c(CDI = 4389), start_date = "2010-01-02")
 # 
 #  #cdi <- cdi %>% filter(date <= "2021-11-26")
-#   cdi[3000,1] <- as.Date("2021-12-10")
-#   cdi[3000,2] <- as.numeric(9.15)
+#   cdi[3005,1] <- as.Date("2021-12-17")
+#   cdi[3005,2] <- as.numeric(9.15)
 # 
 # ####################################################################
 # ### Captando e tratando dados --------------------------------------
@@ -1111,9 +1111,9 @@ scale_colour_manual(values = c("#173F5F", "#20639B", "#3CAEA3", "#F6D55C", "#ED5
 ### gráfico -----
 
 
-curva_seg <- read.csv2("curva-pre_2021-12-03.csv")
+curva_seg <- read.csv2("curva-pre_2021-12-10.csv")
 
-curva_sex <- read.csv2("curva-pre_2021-12-10.csv")
+curva_sex <- read.csv2("curva-pre_2021-12-17.csv")
 
 
 
@@ -1168,216 +1168,216 @@ plot_curvas_pre <- ggplot(curvas, aes(x = Vencimento, y = Taxa, colour = dia_sem
 #################### Inflação --------------------------------------------------
 ################################################################################
 
- 
-inflacao <- '/t/1737/n1/all/v/2266/p/all/d/v2266%2013' %>%
-  get_sidra(api=.) %>%
-  mutate(date = parse_date(`Mês (Código)`, format="%Y%m")) %>%
-  rename(indice = Valor) %>%
-  mutate(inflacao_mensal = (indice/lag(indice,1)-1)*100,
-         inflacao_anual = (indice/lag(indice,12)-1)*100) %>%
-  select(date, indice, inflacao_mensal, inflacao_anual)
- 
- 
-######### Inflação mensal ########
-
-### condição para registrar negativos e positivos com cores diferentes ### 
-inflacao <- inflacao %>% mutate(Color = ifelse(inflacao_mensal < 0, "negativo","green"))
-
- 
-inflacao_12 <- inflacao %>% filter(date >= "2021-01-01")
-
-
-### gráfico em barras ### 
-inf_mensal_graph <- ggplot(data=inflacao_12, aes(x = date, y = inflacao_mensal, fill = Color)) +
-  geom_bar(position = "dodge", stat = "identity") +
-  labs(y="% a.m.",
-       x="",
-       title = "Inflação mensal medida pelo IPCA",
-       caption = "Fonte: Índice de Preços ao Consumidor Amplo (IPCA) - IBGE | Elaboração: BP Investimentos") +
-  geom_hline(yintercept = 0) +
-  geom_text(aes(label = paste0(format(round(inflacao_mensal,2), big.mark = ".", decimal.mark = ","),"%"),
-                vjust = ifelse(inflacao_mensal >= 0, -0.5, 1.5)),size = 3,
-            color = 'black',fontface='bold') +
-  theme_minimal() +
-  theme(legend.position = "none",
-          strip.text = element_text(face = "bold", color = "#2E2C2F", size = "11"),
-          plot.title = element_text(size=11, hjust = 0.5, face="bold"),
-          axis.title.x = element_text(face="bold", color="#000000",size = 7),
-          axis.title.y = element_text(face="bold", color="#000000",size = 7),
-          plot.subtitle = element_text(size=9, hjust = 0.5, face="bold"),
-          axis.text.y = element_text(face="bold", color="#000000",size = 7),
-          axis.text.x = element_text(face="bold", color="#000000",size = 7)) +
-  scale_x_date(date_labels = "%b\n%Y", breaks = "1 month", expand = c(0,1)) +
-  scale_fill_manual(values = c("#27ae60","#c0392b")) +
-  scale_y_continuous(breaks = seq(0,max(inflacao_12$inflacao_mensal) + 0.2, 0.1),
-                     labels = scales::number_format(big.mark = ".", decimal.mark = ",", accuracy = 0.01),
-                     limits = c(0, max(inflacao_12$inflacao_mensal) + 0.2)) +
-  theme_xaringan(text_font_size = 7)
-
-
-
-########### Inflação em 12 meses #############
-
-
-ultimo_valor <- inflacao %>% # last trading day
-                slice(which.max(date))
-
-
-inf_12meses_graph <- ggplot(data = inflacao %>% filter(date > "2020-01-01"), aes(x = date, y = inflacao_anual)) +
-  geom_line(size = 1, colour = "#ffa600") +
-  labs(title = "Inflação acumulada em 12 meses",
-       caption = "Fonte: Índice de Preços ao Consumidor Amplo (IPCA) - IBGE | Elaboração: BP Investimentos",
-       x='',
-       y="% a.a.") +
-  theme_minimal() +
-  theme(legend.position = "none",
-          strip.text = element_text(face = "bold", color = "#2E2C2F", size = "11"),
-          plot.title = element_text(size=11, hjust = 0.5, face="bold"),
-          axis.title.x = element_text(face="bold", color="#000000",size = 7),
-          axis.title.y = element_text(face="bold", color="#000000",size = 7),
-          plot.subtitle = element_text(size=9, hjust = 0.5, face="bold"),
-          axis.text.y = element_text(face="bold", color="#000000",size = 7),
-          axis.text.x = element_text(face="bold", color="#000000",size = 7)) +
-  scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",", accuracy = 0.01)) +
-  scale_x_date(date_labels = "%b\n%Y", breaks = "3 month", expand = c(0,15)) +
-  geom_label_repel(data = ultimo_valor,
-                   aes(label = paste0(round(inflacao_anual,2),"%")),
-                   color = 'black',
-                   fontface = "bold",
-                   fill = '#ffa600') +
-  theme_xaringan(text_font_size = 7)
+#  
+# inflacao <- '/t/1737/n1/all/v/2266/p/all/d/v2266%2013' %>%
+#   get_sidra(api=.) %>%
+#   mutate(date = parse_date(`Mês (Código)`, format="%Y%m")) %>%
+#   rename(indice = Valor) %>%
+#   mutate(inflacao_mensal = (indice/lag(indice,1)-1)*100,
+#          inflacao_anual = (indice/lag(indice,12)-1)*100) %>%
+#   select(date, indice, inflacao_mensal, inflacao_anual)
+#  
+#  
+# ######### Inflação mensal ########
+# 
+# ### condição para registrar negativos e positivos com cores diferentes ### 
+# inflacao <- inflacao %>% mutate(Color = ifelse(inflacao_mensal < 0, "negativo","green"))
+# 
+#  
+# inflacao_12 <- inflacao %>% filter(date >= "2021-01-01")
+# 
+# 
+# ### gráfico em barras ### 
+# inf_mensal_graph <- ggplot(data=inflacao_12, aes(x = date, y = inflacao_mensal, fill = Color)) +
+#   geom_bar(position = "dodge", stat = "identity") +
+#   labs(y="% a.m.",
+#        x="",
+#        title = "Inflação mensal medida pelo IPCA",
+#        caption = "Fonte: Índice de Preços ao Consumidor Amplo (IPCA) - IBGE | Elaboração: BP Investimentos") +
+#   geom_hline(yintercept = 0) +
+#   geom_text(aes(label = paste0(format(round(inflacao_mensal,2), big.mark = ".", decimal.mark = ","),"%"),
+#                 vjust = ifelse(inflacao_mensal >= 0, -0.5, 1.5)),size = 3,
+#             color = 'black',fontface='bold') +
+#   theme_minimal() +
+#   theme(legend.position = "none",
+#           strip.text = element_text(face = "bold", color = "#2E2C2F", size = "11"),
+#           plot.title = element_text(size=11, hjust = 0.5, face="bold"),
+#           axis.title.x = element_text(face="bold", color="#000000",size = 7),
+#           axis.title.y = element_text(face="bold", color="#000000",size = 7),
+#           plot.subtitle = element_text(size=9, hjust = 0.5, face="bold"),
+#           axis.text.y = element_text(face="bold", color="#000000",size = 7),
+#           axis.text.x = element_text(face="bold", color="#000000",size = 7)) +
+#   scale_x_date(date_labels = "%b\n%Y", breaks = "1 month", expand = c(0,1)) +
+#   scale_fill_manual(values = c("#27ae60","#c0392b")) +
+#   scale_y_continuous(breaks = seq(0,max(inflacao_12$inflacao_mensal) + 0.2, 0.1),
+#                      labels = scales::number_format(big.mark = ".", decimal.mark = ",", accuracy = 0.01),
+#                      limits = c(0, max(inflacao_12$inflacao_mensal) + 0.2)) +
+#   theme_xaringan(text_font_size = 7)
+# 
+# 
+# 
+# ########### Inflação em 12 meses #############
+# 
+# 
+# ultimo_valor <- inflacao %>% # last trading day
+#                 slice(which.max(date))
+# 
+# 
+# inf_12meses_graph <- ggplot(data = inflacao %>% filter(date > "2020-01-01"), aes(x = date, y = inflacao_anual)) +
+#   geom_line(size = 1, colour = "#ffa600") +
+#   labs(title = "Inflação acumulada em 12 meses",
+#        caption = "Fonte: Índice de Preços ao Consumidor Amplo (IPCA) - IBGE | Elaboração: BP Investimentos",
+#        x='',
+#        y="% a.a.") +
+#   theme_minimal() +
+#   theme(legend.position = "none",
+#           strip.text = element_text(face = "bold", color = "#2E2C2F", size = "11"),
+#           plot.title = element_text(size=11, hjust = 0.5, face="bold"),
+#           axis.title.x = element_text(face="bold", color="#000000",size = 7),
+#           axis.title.y = element_text(face="bold", color="#000000",size = 7),
+#           plot.subtitle = element_text(size=9, hjust = 0.5, face="bold"),
+#           axis.text.y = element_text(face="bold", color="#000000",size = 7),
+#           axis.text.x = element_text(face="bold", color="#000000",size = 7)) +
+#   scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",", accuracy = 0.01)) +
+#   scale_x_date(date_labels = "%b\n%Y", breaks = "3 month", expand = c(0,15)) +
+#   geom_label_repel(data = ultimo_valor,
+#                    aes(label = paste0(round(inflacao_anual,2),"%")),
+#                    color = 'black',
+#                    fontface = "bold",
+#                    fill = '#ffa600') +
+#   theme_xaringan(text_font_size = 7)
 
 
 
 ############# Contribuição por grupo ################
-
-
-# variação dos grupos ao longo do mês
-variacao <- '/t/7060/n1/all/v/63/p/all/c315/7170,7445,7486,7558,7625,7660,7712,7766,7786/d/v63%202' %>%
-  get_sidra(api=.) %>%
-  mutate(date = parse_date(`Mês (Código)`, format='%Y%m')) %>%
-  select(date, "Geral, grupo, subgrupo, item e subitem", Valor) %>%
-  pivot_wider(names_from = "Geral, grupo, subgrupo, item e subitem",
-              values_from = Valor)
-
-# peso de cada produto ao longo do mês
-peso <- '/t/7060/n1/all/v/66/p/all/c315/7170,7445,7486,7558,7625,7660,7712,7766,7786/d/v66%204' %>%
-  get_sidra(api=.) %>%
-  mutate(date = parse_date(`Mês (Código)`, format='%Y%m')) %>%
-  select(date, "Geral, grupo, subgrupo, item e subitem", Valor) %>%
-  pivot_wider(names_from = "Geral, grupo, subgrupo, item e subitem",
-              values_from = Valor)
-
-# calculando a contribuição de cada grupo
-contribuicao <- (variacao[,-1]*peso[,-1]/100) %>%
-  mutate(date = variacao$date) %>%
-  select(date, everything())
-
-
-### Inflação
-inflacao_grupo <- '/t/1737/n1/all/v/2266/p/all/d/v2266%2013' %>%
-  get_sidra(api=.) %>%
-  mutate(date = parse_date(`Mês (Código)`, format="%Y%m")) %>%
-  rename(indice = Valor) %>%
-  mutate(inflacao_mensal = (indice/lag(indice,1)-1)*100,
-         inflacao_anual = (indice/lag(indice,12)-1)*100) %>%
-  select(date, indice, inflacao_mensal, inflacao_anual)
-
-
-inflacao_grupo <- inflacao_grupo %>% filter("2021-01-01" <= date & date <= "2021-11-01")
-
-# criando coluna com apenas o mês/ano
-contribuicao$mes_ano <- format(contribuicao$date, "%Y%m")
-inflacao_grupo$mes_ano <- format(inflacao_grupo$date, "%Y%m")
-
-inflacao_grupo$date <- NULL
-inflacao_grupo$indice <- NULL
-
-# unindo contribuição com a inflação
-contribuicao <- inner_join(contribuicao, inflacao_grupo, by="mes_ano")
-
-# transformando dataset em 'long'
-contribuicao2 <- contribuicao %>% gather("setor","variação",-c(date,mes_ano,inflacao_mensal,inflacao_anual ))
-
-# renomenado coluna setor
-contribuicao2$setor <-  recode(contribuicao2$setor,
-                               `1.Alimentação e bebidas` = "Alimentação e bebidas",
-                               `2.Habitação` = "Habitação",
-                               `3.Artigos de residência` =  "Artigos de residência",
-                               `4.Vestuário` = "Vestuário",
-                               `5.Transportes` = "Transportes",
-                               `6.Saúde e cuidados pessoais` = "Saúde e cuidados pessoais",
-                               `7.Despesas pessoais` = "Despesas pessoais",
-                               `8.Educação` = "Educação",
-                               `9.Comunicação` = "Comunicação")
-
-
-
-
-# criando coluna com nome do mês
-contribuicao2$mes <- month(contribuicao2$date)
-
-# ajustando a ordem dos meses
-contribuicao2 <- contribuicao2 %>% mutate(mes = factor(case_when(mes == 1 ~ "Janeiro",
-                                                mes == 2 ~ "Fevereiro",
-                                                mes == 3 ~ "Março",
-                                                mes == 4 ~ "Abril",
-                                                mes == 5 ~ "Maio",
-                                                mes == 6 ~ "Junho",
-                                                mes == 7 ~ "Julho",
-                                                mes == 8 ~ "Agosto",
-                                                mes == 9 ~ "Setembro",
-                                                mes == 10 ~ "Outubro",
-                                                mes == 11 ~ "Novembro",
-                                                mes == 12 ~ "Dezembro"),
-                         levels = c("Janeiro","Fevereiro","Março","Abril","Maio","Junho",
-                                    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro")))
-
-
-# condição para registrar negativos e positivos com cores diferentes
-contribuicao2 <- contribuicao2 %>% mutate(Color = ifelse(variação < 0, "negativo","green"))
-
-# ordenando setores
-contribuicao2$setor <-  factor(contribuicao2$setor, levels = c("Vestuário",
-                                                               "Transportes",
-                                                               "Saúde e cuidados pessoais",
-                                                               "Habitação",
-                                                               "Educação",
-                                                               "Despesas pessoais",
-                                                               "Comunicação",
-                                                               "Artigos de residência",
-                                                               "Alimentação e bebidas"))
-
-# gráfico de impacto mensal por grupo, separado por mês
-vertical_sep_ipca <- ggplot(contribuicao2, aes(x=variação,y=setor,fill=Color))+
-  geom_col() +
-  labs(x="", y="", subtitle = "Variação acumulada em 2021 (%): 9,26\nVariação acumulada em 12 meses (%): 10,74", fill="",
-       caption = "Fonte: Índice de Preços ao Consumidor Amplo (IPCA) - IBGE | Elaboração: BP Investimentos",
-       title = "Contribuição, em pontos percentuais, de cada grupo do IPCA na inflação mensal. 2021") +
-  geom_vline(xintercept = 0) +
-  # geom_text(aes(label= round(variação,4)), size = 1.6, position = position_dodge(width = 0.85),
-  #           hjust = ifelse(contribuicao2$variação >= 0,-0.1, 1.1), color = 'black',fontface='bold') +
-  facet_wrap(~mes, ncol = 4) +
-  geom_text(aes(x = variação + 0.08 * sign(variação), label= round(variação,4)), 
-            position = position_dodge(width = 0.9), 
-            size = 1.8, color = 'black',fontface='bold') +
-  theme_minimal() +
-  theme(plot.title = element_text(face="bold", size = 12),
-        plot.subtitle = element_text(face="italic", size = 8),
-        plot.caption = element_text(size = 8),
-        axis.title.x = element_text(size=9, colour = "black"),
-        axis.title.y = element_text(size=9,  colour = "black"),
-        axis.text.y = element_text(face="bold", color="#000000", 
-                                   size=6),
-        axis.text.x = element_text(face="bold", color="#000000", 
-                                   size=6),
-        legend.position = "none") +
-  scale_x_continuous(limits = c(min(contribuicao2$variação) - 0.1, max(contribuicao2$variação) + 0.1),
-                     breaks = seq(min(contribuicao2$variação) - 0.1, max(contribuicao2$variação) + 0.1, 0.2),
-                     labels = scales::number_format(big.mark = ".", decimal.mark = ",", accuracy = 0.1)) +
-  scale_fill_manual(values = c("#27ae60","#c0392b")) +
-  theme_xaringan(text_font_size = 10)
-
+# 
+# 
+# # variação dos grupos ao longo do mês
+# variacao <- '/t/7060/n1/all/v/63/p/all/c315/7170,7445,7486,7558,7625,7660,7712,7766,7786/d/v63%202' %>%
+#   get_sidra(api=.) %>%
+#   mutate(date = parse_date(`Mês (Código)`, format='%Y%m')) %>%
+#   select(date, "Geral, grupo, subgrupo, item e subitem", Valor) %>%
+#   pivot_wider(names_from = "Geral, grupo, subgrupo, item e subitem",
+#               values_from = Valor)
+# 
+# # peso de cada produto ao longo do mês
+# peso <- '/t/7060/n1/all/v/66/p/all/c315/7170,7445,7486,7558,7625,7660,7712,7766,7786/d/v66%204' %>%
+#   get_sidra(api=.) %>%
+#   mutate(date = parse_date(`Mês (Código)`, format='%Y%m')) %>%
+#   select(date, "Geral, grupo, subgrupo, item e subitem", Valor) %>%
+#   pivot_wider(names_from = "Geral, grupo, subgrupo, item e subitem",
+#               values_from = Valor)
+# 
+# # calculando a contribuição de cada grupo
+# contribuicao <- (variacao[,-1]*peso[,-1]/100) %>%
+#   mutate(date = variacao$date) %>%
+#   select(date, everything())
+# 
+# 
+# ### Inflação
+# inflacao_grupo <- '/t/1737/n1/all/v/2266/p/all/d/v2266%2013' %>%
+#   get_sidra(api=.) %>%
+#   mutate(date = parse_date(`Mês (Código)`, format="%Y%m")) %>%
+#   rename(indice = Valor) %>%
+#   mutate(inflacao_mensal = (indice/lag(indice,1)-1)*100,
+#          inflacao_anual = (indice/lag(indice,12)-1)*100) %>%
+#   select(date, indice, inflacao_mensal, inflacao_anual)
+# 
+# 
+# inflacao_grupo <- inflacao_grupo %>% filter("2021-01-01" <= date & date <= "2021-11-01")
+# 
+# # criando coluna com apenas o mês/ano
+# contribuicao$mes_ano <- format(contribuicao$date, "%Y%m")
+# inflacao_grupo$mes_ano <- format(inflacao_grupo$date, "%Y%m")
+# 
+# inflacao_grupo$date <- NULL
+# inflacao_grupo$indice <- NULL
+# 
+# # unindo contribuição com a inflação
+# contribuicao <- inner_join(contribuicao, inflacao_grupo, by="mes_ano")
+# 
+# # transformando dataset em 'long'
+# contribuicao2 <- contribuicao %>% gather("setor","variação",-c(date,mes_ano,inflacao_mensal,inflacao_anual ))
+# 
+# # renomenado coluna setor
+# contribuicao2$setor <-  recode(contribuicao2$setor,
+#                                `1.Alimentação e bebidas` = "Alimentação e bebidas",
+#                                `2.Habitação` = "Habitação",
+#                                `3.Artigos de residência` =  "Artigos de residência",
+#                                `4.Vestuário` = "Vestuário",
+#                                `5.Transportes` = "Transportes",
+#                                `6.Saúde e cuidados pessoais` = "Saúde e cuidados pessoais",
+#                                `7.Despesas pessoais` = "Despesas pessoais",
+#                                `8.Educação` = "Educação",
+#                                `9.Comunicação` = "Comunicação")
+# 
+# 
+# 
+# 
+# # criando coluna com nome do mês
+# contribuicao2$mes <- month(contribuicao2$date)
+# 
+# # ajustando a ordem dos meses
+# contribuicao2 <- contribuicao2 %>% mutate(mes = factor(case_when(mes == 1 ~ "Janeiro",
+#                                                 mes == 2 ~ "Fevereiro",
+#                                                 mes == 3 ~ "Março",
+#                                                 mes == 4 ~ "Abril",
+#                                                 mes == 5 ~ "Maio",
+#                                                 mes == 6 ~ "Junho",
+#                                                 mes == 7 ~ "Julho",
+#                                                 mes == 8 ~ "Agosto",
+#                                                 mes == 9 ~ "Setembro",
+#                                                 mes == 10 ~ "Outubro",
+#                                                 mes == 11 ~ "Novembro",
+#                                                 mes == 12 ~ "Dezembro"),
+#                          levels = c("Janeiro","Fevereiro","Março","Abril","Maio","Junho",
+#                                     "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro")))
+# 
+# 
+# # condição para registrar negativos e positivos com cores diferentes
+# contribuicao2 <- contribuicao2 %>% mutate(Color = ifelse(variação < 0, "negativo","green"))
+# 
+# # ordenando setores
+# contribuicao2$setor <-  factor(contribuicao2$setor, levels = c("Vestuário",
+#                                                                "Transportes",
+#                                                                "Saúde e cuidados pessoais",
+#                                                                "Habitação",
+#                                                                "Educação",
+#                                                                "Despesas pessoais",
+#                                                                "Comunicação",
+#                                                                "Artigos de residência",
+#                                                                "Alimentação e bebidas"))
+# 
+# # gráfico de impacto mensal por grupo, separado por mês
+# vertical_sep_ipca <- ggplot(contribuicao2, aes(x=variação,y=setor,fill=Color))+
+#   geom_col() +
+#   labs(x="", y="", subtitle = "Variação acumulada em 2021 (%): 9,26\nVariação acumulada em 12 meses (%): 10,74", fill="",
+#        caption = "Fonte: Índice de Preços ao Consumidor Amplo (IPCA) - IBGE | Elaboração: BP Investimentos",
+#        title = "Contribuição, em pontos percentuais, de cada grupo do IPCA na inflação mensal. 2021") +
+#   geom_vline(xintercept = 0) +
+#   # geom_text(aes(label= round(variação,4)), size = 1.6, position = position_dodge(width = 0.85),
+#   #           hjust = ifelse(contribuicao2$variação >= 0,-0.1, 1.1), color = 'black',fontface='bold') +
+#   facet_wrap(~mes, ncol = 4) +
+#   geom_text(aes(x = variação + 0.08 * sign(variação), label= round(variação,4)), 
+#             position = position_dodge(width = 0.9), 
+#             size = 1.8, color = 'black',fontface='bold') +
+#   theme_minimal() +
+#   theme(plot.title = element_text(face="bold", size = 12),
+#         plot.subtitle = element_text(face="italic", size = 8),
+#         plot.caption = element_text(size = 8),
+#         axis.title.x = element_text(size=9, colour = "black"),
+#         axis.title.y = element_text(size=9,  colour = "black"),
+#         axis.text.y = element_text(face="bold", color="#000000", 
+#                                    size=6),
+#         axis.text.x = element_text(face="bold", color="#000000", 
+#                                    size=6),
+#         legend.position = "none") +
+#   scale_x_continuous(limits = c(min(contribuicao2$variação) - 0.1, max(contribuicao2$variação) + 0.1),
+#                      breaks = seq(min(contribuicao2$variação) - 0.1, max(contribuicao2$variação) + 0.1, 0.2),
+#                      labels = scales::number_format(big.mark = ".", decimal.mark = ",", accuracy = 0.1)) +
+#   scale_fill_manual(values = c("#27ae60","#c0392b")) +
+#   theme_xaringan(text_font_size = 10)
+# 
 
 # NA to "-" -------------------------------
 opts <- options(knitr.kable.NA = "-")
@@ -1718,39 +1718,6 @@ ntnf_graph
 ```{r echo=FALSE}
 
 plot_curvas_pre 
-
-```
-
-
----
-background-image: url("inflacao.png")
-background-position: center
-background-size: contain
-
----
-<br />
-<br />
-
-
-```{r echo=FALSE}
-
-
-grid.arrange(inf_mensal_graph, inf_12meses_graph, ncol = 2)
-
-
-```
-
-
----
-<br />
-<br />
-
-
-```{r echo=FALSE}
-
-
-vertical_sep_ipca
-
 
 ```
 
