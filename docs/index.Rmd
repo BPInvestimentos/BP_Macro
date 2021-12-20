@@ -1601,7 +1601,7 @@ ggplot(dataset_indices, aes(x=date,y = ret_acum)) +
   geom_line(size = 1.1) +
   labs(y="%", x="", fill="",
        title = "Rendimento dos títulos de 5, 10 e 30 anos do Tesouro Americano",
-       subtitle = "Jan/2020 - Out/2021",
+       subtitle = "Jan/2020 - Dez/2021",
        caption = "Fonte: FED | Elaboração: BP Investimentos",
        colour = "") +
   theme_minimal() +
