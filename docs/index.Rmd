@@ -82,15 +82,15 @@ options(scipen = 999)
 ```{r, include=FALSE, warning=FALSE}
 
 # segunda-feira
-dt_inicio_semana = as.Date("2021-12-13")
+dt_inicio_semana = as.Date("2021-12-27")
 
 # sexta-feira
-dt_fim_semana = as.Date("2021-12-17")
-dt_commoditie_final_semana = "17/12/2021"
+dt_fim_semana = as.Date("2021-12-31")
+dt_commoditie_final_semana = "31/12/2021"
 
 
-setwd("C:\\Users\\pc\\Desktop\\BP_Investimentos\\BPMacro\\docs")
-#setwd("C:\\Users\\BI-Assessor\\Desktop\\BP_Investimentos\\BPMacro\\docs")
+#setwd("C:\\Users\\pc\\Desktop\\BP_Investimentos\\BPMacro\\docs")
+setwd("C:\\Users\\BI-Assessor\\Desktop\\BP_Investimentos\\BPMacro\\docs")
 
 
 # Configura API Fred
@@ -225,9 +225,11 @@ var_semanal_ewz <- function() {
     as.data.frame() %>% 
     mutate(dia = weekdays(date),
            semana = epiweek(date)) %>% 
-    filter(dia %in% c("segunda-feira", "sexta-feira")) %>% 
+ #   filter(dia %in% c("segunda-feira", "sexta-feira")) %>% 
+    filter(dia %in% c("segunda-feira", "quinta-feira")) %>% 
     mutate(var_semanal =  Close/lag(Close)-1) %>% 
-    filter(dia %in% c("sexta-feira")) %>% 
+#    filter(dia %in% c("sexta-feira")) %>% 
+    filter(dia %in% c("quinta-feira")) %>% 
     mutate(Color = ifelse(var_semanal < 0, "negativo","green"))
   
   
@@ -583,7 +585,7 @@ all_bounds_gather$titulo_ano <- factor(all_bounds_gather$titulo_ano,
 
 
 # usando a versão e o enviroment desejado do Anaconda ----------------------
-use_python("C:\\Users\\pc\\anaconda3\\python.exe", required = TRUE)
+#use_python("C:\\Users\\pc\\anaconda3\\python.exe", required = TRUE)
 
 
 # conferindo a versão e o enviroment ----------------------------
@@ -948,7 +950,7 @@ scale_colour_manual(values = c("#173F5F", "#20639B", "#3CAEA3", "#F6D55C", "#ED5
 
 # 
 # # Data de refrência -----------------
-# dt_prefix = as.Date("2021-12-17")
+# dt_prefix = as.Date("2021-12-30")
 # 
 # 
 # ####################################################################
@@ -959,8 +961,8 @@ scale_colour_manual(values = c("#173F5F", "#20639B", "#3CAEA3", "#F6D55C", "#ED5
 # cdi <- get_series(c(CDI = 4389), start_date = "2010-01-02")
 # 
 #  #cdi <- cdi %>% filter(date <= "2021-11-26")
-#   cdi[3005,1] <- as.Date("2021-12-17")
-#   cdi[3005,2] <- as.numeric(9.15)
+#   # cdi[3015,1] <- as.Date("2021-12-31")
+#   # cdi[3015,2] <- as.numeric(9.15)
 # 
 # ####################################################################
 # ### Captando e tratando dados --------------------------------------
@@ -1106,14 +1108,14 @@ scale_colour_manual(values = c("#173F5F", "#20639B", "#3CAEA3", "#F6D55C", "#ED5
 # 
 # 
 # write.csv2(curva_pre, paste0("curva-pre_", dt_prefix,".csv"), row.names = F)
-
+# 
 
 ### gráfico -----
 
 
-curva_seg <- read.csv2("curva-pre_2021-12-10.csv")
+curva_seg <- read.csv2("curva-pre_2021-12-23.csv")
 
-curva_sex <- read.csv2("curva-pre_2021-12-17.csv")
+curva_sex <- read.csv2("curva-pre_2021-12-30.csv")
 
 
 
@@ -1167,8 +1169,8 @@ plot_curvas_pre <- ggplot(curvas, aes(x = Vencimento, y = Taxa, colour = dia_sem
 ################################################################################
 #################### Inflação --------------------------------------------------
 ################################################################################
-
-#  
+# 
+# 
 # inflacao <- '/t/1737/n1/all/v/2266/p/all/d/v2266%2013' %>%
 #   get_sidra(api=.) %>%
 #   mutate(date = parse_date(`Mês (Código)`, format="%Y%m")) %>%
@@ -1176,18 +1178,18 @@ plot_curvas_pre <- ggplot(curvas, aes(x = Vencimento, y = Taxa, colour = dia_sem
 #   mutate(inflacao_mensal = (indice/lag(indice,1)-1)*100,
 #          inflacao_anual = (indice/lag(indice,12)-1)*100) %>%
 #   select(date, indice, inflacao_mensal, inflacao_anual)
-#  
-#  
+# 
+# 
 # ######### Inflação mensal ########
 # 
-# ### condição para registrar negativos e positivos com cores diferentes ### 
+# ### condição para registrar negativos e positivos com cores diferentes ###
 # inflacao <- inflacao %>% mutate(Color = ifelse(inflacao_mensal < 0, "negativo","green"))
 # 
-#  
+# 
 # inflacao_12 <- inflacao %>% filter(date >= "2021-01-01")
 # 
 # 
-# ### gráfico em barras ### 
+# ### gráfico em barras ###
 # inf_mensal_graph <- ggplot(data=inflacao_12, aes(x = date, y = inflacao_mensal, fill = Color)) +
 #   geom_bar(position = "dodge", stat = "identity") +
 #   labs(y="% a.m.",
@@ -1246,10 +1248,10 @@ plot_curvas_pre <- ggplot(curvas, aes(x = Vencimento, y = Taxa, colour = dia_sem
 #                    fontface = "bold",
 #                    fill = '#ffa600') +
 #   theme_xaringan(text_font_size = 7)
-
-
-
-############# Contribuição por grupo ################
+# 
+# 
+# 
+# ############# Contribuição por grupo ################
 # 
 # 
 # # variação dos grupos ao longo do mês
@@ -1358,8 +1360,8 @@ plot_curvas_pre <- ggplot(curvas, aes(x = Vencimento, y = Taxa, colour = dia_sem
 #   # geom_text(aes(label= round(variação,4)), size = 1.6, position = position_dodge(width = 0.85),
 #   #           hjust = ifelse(contribuicao2$variação >= 0,-0.1, 1.1), color = 'black',fontface='bold') +
 #   facet_wrap(~mes, ncol = 4) +
-#   geom_text(aes(x = variação + 0.08 * sign(variação), label= round(variação,4)), 
-#             position = position_dodge(width = 0.9), 
+#   geom_text(aes(x = variação + 0.08 * sign(variação), label= round(variação,4)),
+#             position = position_dodge(width = 0.9),
 #             size = 1.8, color = 'black',fontface='bold') +
 #   theme_minimal() +
 #   theme(plot.title = element_text(face="bold", size = 12),
@@ -1367,9 +1369,9 @@ plot_curvas_pre <- ggplot(curvas, aes(x = Vencimento, y = Taxa, colour = dia_sem
 #         plot.caption = element_text(size = 8),
 #         axis.title.x = element_text(size=9, colour = "black"),
 #         axis.title.y = element_text(size=9,  colour = "black"),
-#         axis.text.y = element_text(face="bold", color="#000000", 
+#         axis.text.y = element_text(face="bold", color="#000000",
 #                                    size=6),
-#         axis.text.x = element_text(face="bold", color="#000000", 
+#         axis.text.x = element_text(face="bold", color="#000000",
 #                                    size=6),
 #         legend.position = "none") +
 #   scale_x_continuous(limits = c(min(contribuicao2$variação) - 0.1, max(contribuicao2$variação) + 0.1),
@@ -1377,7 +1379,7 @@ plot_curvas_pre <- ggplot(curvas, aes(x = Vencimento, y = Taxa, colour = dia_sem
 #                      labels = scales::number_format(big.mark = ".", decimal.mark = ",", accuracy = 0.1)) +
 #   scale_fill_manual(values = c("#27ae60","#c0392b")) +
 #   theme_xaringan(text_font_size = 10)
-# 
+
 
 # NA to "-" -------------------------------
 opts <- options(knitr.kable.NA = "-")
