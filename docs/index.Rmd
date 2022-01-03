@@ -643,7 +643,7 @@ brent_graph <- ggplot(brent_futuro, aes(x = data, y = Close)) +
                                                     decimal.mark = ","),
                      breaks = c(15,25,35,45,55,65,75,85,95),
                      limits = c(15,95)) +
-  scale_x_date(date_labels = "%b\n%Y", breaks = "3 month") +
+  scale_x_date(date_labels = "%b\n%Y", breaks = "3 month", expand = c(0,15)) +
   theme_xaringan(text_font_size = 10)
 
 
@@ -681,7 +681,7 @@ ferro_graph <- ggplot(ferro_futuros, aes(x = data, y = Close)) +
                                                     decimal.mark = ","),
                      breaks = c(70,110,150,190,230),
                      limits = c(70, 230)) +
-  scale_x_date(date_labels = "%b\n%Y", breaks = "3 month") +
+  scale_x_date(date_labels = "%b\n%Y", breaks = "3 month", expand = c(0,15)) +
   theme_xaringan(text_font_size = 10)
 
 
@@ -719,7 +719,7 @@ soja_graph <- ggplot(soja_futuro, aes(x = data, y = Close)) +
                                                     decimal.mark = ","),
                      breaks = seq(800,1800,200),
                      limits = c(800,1800)) +
-  scale_x_date(date_labels = "%b\n%Y", breaks = "3 month") +
+  scale_x_date(date_labels = "%b\n%Y", breaks = "3 month", expand = c(0,15)) +
   theme_xaringan(text_font_size = 10)
 
 
@@ -756,7 +756,7 @@ milho_graph <- ggplot(milho_futuro, aes(x = data, y = Close)) +
                                                     decimal.mark = ","),
                      breaks = seq(250,800,100),
                      limits = c(250,800)) +
-  scale_x_date(date_labels = "%b\n%Y", breaks = "3 month") +
+  scale_x_date(date_labels = "%b\n%Y", breaks = "3 month", expand = c(0,15)) +
   theme_xaringan(text_font_size = 10)
 
 
@@ -793,7 +793,7 @@ algodao_graph <- ggplot(algodao_futuros, aes(x = data, y = Close)) +
                                                     decimal.mark = ","),
                      breaks = seq(40,120,20),
                      limits = c(40,120)) +
-  scale_x_date(date_labels = "%b\n%Y", breaks = "3 month") +
+  scale_x_date(date_labels = "%b\n%Y", breaks = "3 month", expand = c(0,15)) +
   theme_xaringan(text_font_size = 10)
 
 
@@ -831,7 +831,7 @@ boi_graph <- ggplot(boi_gordo_futuros, aes(x = data, y = Close)) +
                                                     decimal.mark = ","),
                      breaks = seq(180,330,30),
                      limits = c(180,330)) +
-  scale_x_date(date_labels = "%b\n%Y", breaks = "3 month") +
+  scale_x_date(date_labels = "%b\n%Y", breaks = "3 month", expand = c(0,15)) +
   theme_xaringan(text_font_size = 10)
 
 
@@ -1631,7 +1631,7 @@ ggplot(dataset_indices, aes(x=date,y = ret_acum)) +
   scale_y_continuous(breaks = c(0.1,0.5,1,1.5,2,2.5),
                      labels = c("0,1","0,5","1,0","1,5","2,0","2,5"),
                      limits = c(0.1,2.5)) +
-  scale_x_date(date_labels = "%b\n%Y", breaks = "1 month") +
+  scale_x_date(date_labels = "%b\n%Y", breaks = "1 month", expand = c(0,15)) +
     theme_xaringan(text_font_size = 10)
 
 
