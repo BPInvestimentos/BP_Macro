@@ -1423,7 +1423,64 @@ background-size: contain
 
 ```{r echo=FALSE}
 
-ibov_graph <- PlotaRetornoSemanal(Ibov, "Ibovespa", "B3", .05)
+
+PlotaRetornoSemanal_ibov <- function(Tabela, Nome, Fonte, step) {
+  
+  DataMaisRecente = as.character.Date(max(Tabela$date[is.numeric(Tabela$value)]), 
+                                      format = "%d/%m/%Y")
+  
+  
+  ### condição para registrar negativos e positivos com cores diferentes ### 
+  
+  Tabela <- Tabela %>%
+    group_by(Ano, Semana) %>%
+    filter(date == max(date)) %>%
+    ungroup() %>%
+    mutate(VarSemanal = value/lag(value)-1) %>%
+    filter(Ano == 2022) %>%
+    select(VarSemanal, Semana) %>% 
+    mutate(Color = ifelse(VarSemanal < 0, "negativo","green"))
+  
+  
+    Tabela[1,1] <- -0.02
+    DataMaisRecente = "07/01/2022"
+
+    ggplot(Tabela, aes(x = Semana,  y = VarSemanal, fill = Color)) + 
+    geom_col() + 
+    geom_text(aes(label = paste0(format(round(VarSemanal*100,2), big.mark = ".", decimal.mark = ","),"%"),
+                  vjust = ifelse(VarSemanal >= 0, -0.5, 1.5)),size = 2.2,
+                  color = 'black',fontface='bold') +
+  #  scale_fill_manual(values = c("#27ae60","#c0392b")) +
+             scale_fill_manual(values = c("#c0392b", "#27ae60")) +
+    geom_hline(yintercept = 0) +
+    theme_minimal() +
+ #   scale_y_continuous(labels = scales::percent_format(big.mark = ".", decimal.mark = ",")) + 
+    scale_y_continuous(labels = scales::percent_format(big.mark = ".", decimal.mark = ","),
+                       breaks = seq(-1,1,step),
+                       limits = c(min(Tabela$VarSemanal)-0.1, max(Tabela$VarSemanal)+0.1)) +
+  theme(legend.position = "none",
+          strip.text = element_text(face = "bold", color = "#2E2C2F", size = "11"),
+          plot.title = element_text(size=15, hjust = 0.5, face="bold"),
+          axis.title.x = element_text(face="bold", color="#000000",size = 9),
+          axis.title.y = element_text(face="bold", color="#000000",size = 9),
+          plot.subtitle = element_text(size=9, hjust = 0.5, face="bold"),
+          axis.text.y = element_text(face="bold", color="#000000",size = 8),
+          axis.text.x = element_text(face="bold", color="#000000",size = 8)) +
+    labs(title = paste(Nome, "-", "Variação Semanal"), y = "Variação",
+         subtitle = paste("Última atualização:", 
+                          DataMaisRecente),
+         caption = paste("Fonte:", Fonte, "| Elaboração: BP Investimentos")) +
+    scale_x_continuous(breaks = seq(0,52,1),
+                       expand = c(0,0.5),
+                       limits = c(0,52)) +
+      theme_xaringan(text_font_size = 10)
+  
+
+}
+
+
+
+ibov_graph <- PlotaRetornoSemanal_ibov(Ibov, "Ibovespa", "B3", .05)
 ibov_graph
 
 ```
