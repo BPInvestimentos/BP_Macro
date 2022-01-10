@@ -82,11 +82,11 @@ options(scipen = 999)
 ```{r, include=FALSE, warning=FALSE}
 
 # segunda-feira
-dt_inicio_semana = as.Date("2021-12-27")
+dt_inicio_semana = as.Date("2022-01-03")
 
 # sexta-feira
-dt_fim_semana = as.Date("2021-12-31")
-dt_commoditie_final_semana = "31/12/2021"
+dt_fim_semana = as.Date("2022-01-07")
+dt_commoditie_final_semana = "07/01/2022"
 
 
 #setwd("C:\\Users\\pc\\Desktop\\BP_Investimentos\\BPMacro\\docs")
@@ -161,7 +161,7 @@ PlotaRetornoSemanal <- function(Tabela, Nome, Fonte, step) {
     filter(date == max(date)) %>%
     ungroup() %>%
     mutate(VarSemanal = value/lag(value)-1) %>%
-    filter(Ano == 2021) %>%
+    filter(Ano == 2022) %>%
     select(VarSemanal, Semana) %>% 
     mutate(Color = ifelse(VarSemanal < 0, "negativo","green"))
     
@@ -171,12 +171,14 @@ PlotaRetornoSemanal <- function(Tabela, Nome, Fonte, step) {
     geom_text(aes(label = paste0(format(round(VarSemanal*100,2), big.mark = ".", decimal.mark = ","),"%"),
                   vjust = ifelse(VarSemanal >= 0, -0.5, 1.5)),size = 2.2,
                   color = 'black',fontface='bold') +
-    scale_fill_manual(values = c("#27ae60","#c0392b")) +
+  #  scale_fill_manual(values = c("#27ae60","#c0392b")) +
+             scale_fill_manual(values = c("#c0392b", "#27ae60")) +
     geom_hline(yintercept = 0) +
     theme_minimal() +
+ #   scale_y_continuous(labels = scales::percent_format(big.mark = ".", decimal.mark = ",")) + 
     scale_y_continuous(labels = scales::percent_format(big.mark = ".", decimal.mark = ","),
                        breaks = seq(-1,1,step),
-                       limits = c(min(Tabela$VarSemanal)-0.005, max(Tabela$VarSemanal)+0.005)) + 
+                       limits = c(min(Tabela$VarSemanal)-0.1, max(Tabela$VarSemanal)+0.1)) +
   theme(legend.position = "none",
           strip.text = element_text(face = "bold", color = "#2E2C2F", size = "11"),
           plot.title = element_text(size=15, hjust = 0.5, face="bold"),
@@ -189,8 +191,10 @@ PlotaRetornoSemanal <- function(Tabela, Nome, Fonte, step) {
          subtitle = paste("Última atualização:", 
                           DataMaisRecente),
          caption = paste("Fonte:", Fonte, "| Elaboração: BP Investimentos")) +
-    scale_x_continuous(breaks = 1:52, expand = c(0,0.5)) +
-    theme_xaringan(text_font_size = 10)
+    scale_x_continuous(breaks = seq(0,52,1),
+                       expand = c(0,0.5),
+                       limits = c(0,52)) +
+      theme_xaringan(text_font_size = 10)
   
 
 }
@@ -215,7 +219,7 @@ var_semanal_ewz <- function() {
   ewz_fil <- ewz %>%
     dplyr::select(date, EWZ.Close) %>% 
     dplyr::rename(Close = "EWZ.Close") %>% 
-    dplyr::filter(date >= "2021-01-01")
+    dplyr::filter(date >= "2022-01-01")
   
   # removendo NA
   ewz_fil <- na.omit(ewz_fil)
@@ -245,12 +249,13 @@ var_semanal_ewz <- function() {
     geom_text(aes(label = paste0(format(round(var_semanal*100,2), big.mark = ".", decimal.mark = ","),"%"),
                   vjust = ifelse(var_semanal >= 0, -0.5, 1.5)),size = 2.2,
               color = 'black',fontface='bold') +
-   scale_fill_manual(values = c("#27ae60","#c0392b")) +
+ #  scale_fill_manual(values = c("#27ae60","#c0392b")) +
+       scale_fill_manual(values = c("#c0392b", "#27ae60")) +
     geom_hline(yintercept = 0) +
     theme_minimal() +
      scale_y_continuous(labels = scales::percent_format(big.mark = ".", decimal.mark = ","),
                        breaks = seq(-1,1,0.05),
-                       limits = c(min(ewz_fil_var$var_semanal)-0.05,max(ewz_fil_var$var_semanal)+ 0.05)) + 
+                       limits = c(min(ewz_fil_var$var_semanal)-0.1,max(ewz_fil_var$var_semanal)+ 0.1)) + 
      theme(legend.position = "none",
           strip.text = element_text(face = "bold", color = "#2E2C2F", size = "11"),
           plot.title = element_text(size=15, hjust = 0.5, face="bold"),
@@ -265,7 +270,9 @@ var_semanal_ewz <- function() {
          subtitle = paste("Última atualização:", 
                           format(DataMaisRecente, "%d/%m/%Y")),
          caption = paste("Fonte: Yahoo Finance! | Elaboração: BP Investimentos")) +
-    scale_x_continuous(breaks = 1:52, expand = c(0,0.5)) +
+    scale_x_continuous(breaks = seq(0,52,1),
+                       expand = c(0,0.5),
+                       limits = c(0,52)) +
     theme_xaringan(text_font_size = 10)
   
   
@@ -627,7 +634,7 @@ brent_futuro$data <- ymd(brent_futuro$data)
 brent_graph <- ggplot(brent_futuro, aes(x = data, y = Close)) +
   geom_line(size = 1.1, colour = "#ffa600") +
   labs(y="Preço do contrato futuro (em Dólar)", x="", fill="",
-       title = "Petróleo Brent Futuros - Dez 21 (BZ1)",
+       title = "Petróleo Brent Futuros - Jan 22 (BZ1)",
        caption = "Fonte: Investing.com | Elaboração: BP Investimentos",
        colour = "") +
   theme_minimal() +
@@ -703,7 +710,7 @@ soja_futuro$data <- ymd(soja_futuro$data)
 soja_graph <- ggplot(soja_futuro, aes(x = data, y = Close)) +
   geom_line(size = 1.1, colour = "#ffa600") +
   labs(y="Preço do contrato futuro (em Dólar)", x="", fill="",
-       title = "Soja NY Futuros - Dez 21 (ZSX1)",
+       title = "Soja NY Futuros - Jan 22 (ZSX1)",
        caption = "Fonte: Investing.com | Elaboração: BP Investimentos",
        colour = "") +
   theme_minimal() +
@@ -740,7 +747,7 @@ milho_futuro$data <- ymd(milho_futuro$data)
 milho_graph <- ggplot(milho_futuro, aes(x = data, y = Close)) +
   geom_line(size = 1.1, colour = "#ffa600") +
   labs(y="Preço do contrato futuro (em Dólar)", x="", fill="",
-       title = "Milho NY Futuros - Dez 21 (ZCZ1)",
+       title = "Milho NY Futuros - Jan 22 (ZCZ1)",
        caption = "Fonte: Investing.com | Elaboração: BP Investimentos",
        colour = "") +
   theme_minimal() +
@@ -777,7 +784,7 @@ algodao_futuros$data <- ymd(algodao_futuros$data)
 algodao_graph <- ggplot(algodao_futuros, aes(x = data, y = Close)) +
   geom_line(size = 1.1, colour = "#ffa600") +
   labs(y="Preço do contrato futuro (em Dólar)", x="", fill="",
-       title = "Algodão NY nº2 Futuros - Dez 21 (CTZ1)",
+       title = "Algodão NY nº2 Futuros - Jan 22 (CTZ1)",
        caption = "Fonte: Investing.com | Elaboração: BP Investimentos",
        colour = "") +
   theme_minimal() +
@@ -815,7 +822,7 @@ boi_gordo_futuros$data <- ymd(boi_gordo_futuros$data)
 boi_graph <- ggplot(boi_gordo_futuros, aes(x = data, y = Close)) +
   geom_line(size = 1.1, colour = "#ffa600") +
   labs(y="Preço do contrato futuro (em Real)", x="", fill="",
-       title = "Boi Gordo Futuros - Dez 21 (BGIc1)",
+       title = "Boi Gordo Futuros - Jan 22 (BGIc1)",
        caption = "Fonte: Investing.com | Elaboração: BP Investimentos",
        colour = "") +
   theme_minimal() +
@@ -947,10 +954,10 @@ scale_colour_manual(values = c("#173F5F", "#20639B", "#3CAEA3", "#F6D55C", "#ED5
 
  
 ########### Prefixado -------------------------------------------------
-
+# 
 # 
 # # Data de refrência -----------------
-# dt_prefix = as.Date("2021-12-30")
+# dt_prefix = as.Date("2022-01-07")
 # 
 # 
 # ####################################################################
@@ -1108,14 +1115,14 @@ scale_colour_manual(values = c("#173F5F", "#20639B", "#3CAEA3", "#F6D55C", "#ED5
 # 
 # 
 # write.csv2(curva_pre, paste0("curva-pre_", dt_prefix,".csv"), row.names = F)
-# 
+
 
 ### gráfico -----
 
 
-curva_seg <- read.csv2("curva-pre_2021-12-23.csv")
+curva_seg <- read.csv2("curva-pre_2021-12-30.csv")
 
-curva_sex <- read.csv2("curva-pre_2021-12-30.csv")
+curva_sex <- read.csv2("curva-pre_2022-01-07.csv")
 
 
 
@@ -1169,7 +1176,7 @@ plot_curvas_pre <- ggplot(curvas, aes(x = Vencimento, y = Taxa, colour = dia_sem
 ################################################################################
 #################### Inflação --------------------------------------------------
 ################################################################################
-# 
+
 # 
 # inflacao <- '/t/1737/n1/all/v/2266/p/all/d/v2266%2013' %>%
 #   get_sidra(api=.) %>%
@@ -1178,8 +1185,8 @@ plot_curvas_pre <- ggplot(curvas, aes(x = Vencimento, y = Taxa, colour = dia_sem
 #   mutate(inflacao_mensal = (indice/lag(indice,1)-1)*100,
 #          inflacao_anual = (indice/lag(indice,12)-1)*100) %>%
 #   select(date, indice, inflacao_mensal, inflacao_anual)
-# 
-# 
+
+
 # ######### Inflação mensal ########
 # 
 # ### condição para registrar negativos e positivos com cores diferentes ###
@@ -1416,7 +1423,7 @@ background-size: contain
 
 ```{r echo=FALSE}
 
-ibov_graph <- PlotaRetornoSemanal(Ibov, "Ibovespa", "B3", .01)
+ibov_graph <- PlotaRetornoSemanal(Ibov, "Ibovespa", "B3", .05)
 ibov_graph
 
 ```
@@ -1444,7 +1451,7 @@ ewz_graph
 ```{r echo=FALSE}
 
 
-sp500_plot <- PlotaRetornoSemanal(SP500, "S&P 500", "FED", .01)
+sp500_plot <- PlotaRetornoSemanal(SP500, "S&P 500", "FED", .05)
 sp500_plot
 
 ```
@@ -1458,7 +1465,60 @@ sp500_plot
 ```{r echo=FALSE}
 
 
-dolar_graph <- PlotaRetornoSemanal(Dolar, "Dólar", "Banco Central", .01)
+PlotaRetornoSemanal <- function(Tabela, Nome, Fonte, step) {
+  
+  DataMaisRecente = as.character.Date(max(Tabela$date[is.numeric(Tabela$value)]), 
+                                      format = "%d/%m/%Y")
+  
+  
+  ### condição para registrar negativos e positivos com cores diferentes ### 
+  
+  Tabela <- Tabela %>%
+    group_by(Ano, Semana) %>%
+    filter(date == max(date)) %>%
+    ungroup() %>%
+    mutate(VarSemanal = value/lag(value)-1) %>%
+    filter(Ano == 2022) %>%
+    select(VarSemanal, Semana) %>% 
+    mutate(Color = ifelse(VarSemanal < 0, "negativo","green"))
+    
+
+    ggplot(Tabela, aes(x = Semana,  y = VarSemanal, fill = Color)) + 
+    geom_col() + 
+    geom_text(aes(label = paste0(format(round(VarSemanal*100,2), big.mark = ".", decimal.mark = ","),"%"),
+                  vjust = ifelse(VarSemanal >= 0, -0.5, 1.5)),size = 2.2,
+                  color = 'black',fontface='bold') +
+   scale_fill_manual(values = c("#27ae60","#c0392b")) +
+  #           scale_fill_manual(values = c("#c0392b", "#27ae60")) +
+    geom_hline(yintercept = 0) +
+    theme_minimal() +
+   # scale_y_continuous(labels = scales::percent_format(big.mark = ".", decimal.mark = ",")) + 
+    scale_y_continuous(labels = scales::percent_format(big.mark = ".", decimal.mark = ","),
+                       breaks = seq(-1,1,step),
+                       limits = c(min(Tabela$VarSemanal)-0.1, max(Tabela$VarSemanal)+0.1)) +
+  theme(legend.position = "none",
+          strip.text = element_text(face = "bold", color = "#2E2C2F", size = "11"),
+          plot.title = element_text(size=15, hjust = 0.5, face="bold"),
+          axis.title.x = element_text(face="bold", color="#000000",size = 9),
+          axis.title.y = element_text(face="bold", color="#000000",size = 9),
+          plot.subtitle = element_text(size=9, hjust = 0.5, face="bold"),
+          axis.text.y = element_text(face="bold", color="#000000",size = 8),
+          axis.text.x = element_text(face="bold", color="#000000",size = 8)) +
+    labs(title = paste(Nome, "-", "Variação Semanal"), y = "Variação",
+         subtitle = paste("Última atualização:", 
+                          DataMaisRecente),
+         caption = paste("Fonte:", Fonte, "| Elaboração: BP Investimentos")) +
+    scale_x_continuous(breaks = seq(0,52,1),
+                       expand = c(0,0.5),
+                       limits = c(0,52)) +
+    theme_xaringan(text_font_size = 10)
+  
+
+}
+
+
+
+dolar_graph <- PlotaRetornoSemanal(Dolar, "Dólar", "Banco Central", .05)
 dolar_graph
 
 ```
@@ -1522,7 +1582,7 @@ ggplot(acoes_setores_v3_menores,
   geom_text(aes(label = paste0(format(round(var_semanal*100,2), big.mark = ".", decimal.mark = ","),"%"),
                 hjust = ifelse(var_semanal >= 0, -0.2, 1.3)),size = 2.5,
             color = 'black',fontface='bold') +
-  scale_fill_manual(values = c("#27ae60","#c0392b")) +
+  scale_fill_manual(values = c("#c0392b", "#27ae60")) +
   # geom_hline(yintercept = 5.5, linetype = "dashed") +
   geom_vline(xintercept = 0) +
   theme_minimal() +
@@ -1603,7 +1663,7 @@ ggplot(dataset_indices, aes(x=date,y = ret_acum)) +
   geom_line(size = 1.1) +
   labs(y="%", x="", fill="",
        title = "Rendimento dos títulos de 5, 10 e 30 anos do Tesouro Americano",
-       subtitle = "Jan/2020 - Dez/2021",
+       subtitle = "Jan/2020 - Jan/2022",
        caption = "Fonte: FED | Elaboração: BP Investimentos",
        colour = "") +
   theme_minimal() +
@@ -1621,8 +1681,6 @@ ggplot(dataset_indices, aes(x=date,y = ret_acum)) +
                       direction = "horizontal",
                       keyheight = unit(2, units = "mm"), 
                       keywidth = unit(35/length(labels), units = "mm"),
-                      title.position = 'top',
-                      title.hjust = 0.5,
                       label.hjust = 0.5,
                       nrow = 1,
                       byrow = TRUE,
